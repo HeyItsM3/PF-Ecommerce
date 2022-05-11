@@ -1,8 +1,41 @@
 const { findByIdAndUpdate } = require('../Models/products')
-const { cloudinary } = require('../../utils/cloudinary')
+const { cloudinary } = require('../utils/utils')
 const ProductModel = require('../Models/products')
+const streamifier = require('streamifier')
+const multer = require('multer')
 
 // GET All Products // by name
+
+// multer.app.use(multer().single('image')) // Procesa o ve si se envia una imagen
+// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
+// // En este caso ingresa por el input de tipo image
+
+const storage = multer.memoryStorage()
+const configMulter = multer({ storage }).single('image')
+
+const uploadImage = async (req, res, next) => {
+  if (!req.file) {
+    res.satus(400).json({ msg: 'You have to upload a file' })
+  }
+  try {
+    const streamUpload = (req) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (result) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
+        })
+        streamifier.createReadStream(req.file.buffer).pipe(stream)
+      })
+    }
+    const result = await streamUpload(req)
+    res.status(200).json(result)
+  } catch (error) {
+    console.log('Filed to upload the image: ' + error)
+  }
+}
 
 const getAllProducts = async (req, res) => {
   const {
@@ -46,27 +79,6 @@ const getProductDetail = async (req, res) => {
 
 // POST
 
-// const postProduct = async (req, res) => {
-//   const {
-//     body: { name, image },
-//   } = req
-
-//   try {
-//     const newProduct = {
-//       name,
-//       image,
-//     }
-
-//     const product = await ProductModel.create(newProduct)
-//     res.status(200).json({
-//       message: 'Successful request',
-//       product,
-//     })
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-
 const postProduct = async (req, res) => {
   const {
     body: {
@@ -100,7 +112,6 @@ const postProduct = async (req, res) => {
     }
 
     console.log(newProduct)
-    // const uploadedResponse = await cloudinary.uploader.upload(image)
     const product = await ProductModel.create(newProduct)
     console.log(product)
     product
@@ -167,4 +178,6 @@ module.exports = {
   postProduct,
   deleteProduct,
   upDateProduct,
+  uploadImage,
+  configMulter,
 }
