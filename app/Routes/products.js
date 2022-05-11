@@ -13,8 +13,8 @@ const router = Router()
 
 router.get('/', getAllProducts)
 router.get('/detail/:id', getProductDetail)
-router.post('/post', postProduct)
-router.post('/upload', configMulter, uploadImage)
+router.post('/post', configMulter, postProduct)
+// router.post('/upload', configMulter, uploadImage)
 router.delete('/delete/:id', deleteProduct)
 router.put('/update/:id', upDateProduct)
 

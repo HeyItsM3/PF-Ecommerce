@@ -13,29 +13,31 @@ const multer = require('multer')
 const storage = multer.memoryStorage()
 const configMulter = multer({ storage }).single('image')
 
-const uploadImage = async (req, res, next) => {
-  if (!req.file) {
-    res.satus(400).json({ msg: 'You have to upload a file' })
-  }
-  try {
-    const streamUpload = (req) => {
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream((error, result) => {
-          if (result) {
-            resolve(result)
-          } else {
-            reject(error)
-          }
-        })
-        streamifier.createReadStream(req.file.buffer).pipe(stream)
-      })
-    }
-    const result = await streamUpload(req)
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(500).json({ msg: 'Filed to upload the image:' + err })
-  }
-}
+// const uploadImage = async (req, res, next) => {
+//   if (!req.file) {
+//     res.satus(400).json({ msg: 'You have to upload a file' })
+//   }
+//   try {
+//     const streamUpload = (req) => {
+//       return new Promise((resolve, reject) => {
+//         const stream = cloudinary.uploader.upload_stream((error, result) => {
+//           if (result) {
+//             resolve(result)
+//           } else {
+//             reject(error)
+//           }
+//         })
+//         streamifier.createReadStream(req.file.buffer).pipe(stream)
+//       })
+//     }
+//     const result = await streamUpload(req)
+
+//     console.log(result)
+//     res.status(200).json(result.url)
+//   } catch (err) {
+//     res.status(500).json({ msg: 'Filed to upload the image:' + err })
+//   }
+// }
 
 const getAllProducts = async (req, res) => {
   const {
@@ -101,9 +103,26 @@ const postProduct = async (req, res) => {
   } = req
 
   try {
+    // if (!file) {
+    //   res.satus(400).json({ msg: 'You have to upload a file' })
+    // }
+    const streamUpload = (req) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (result) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
+        })
+        streamifier.createReadStream(req.file.buffer).pipe(stream)
+      })
+    }
+    const { url } = await streamUpload(req)
+    console.log(url)
+
     const newProduct = {
       name,
-      image,
       brand,
       description,
       price,
@@ -113,6 +132,7 @@ const postProduct = async (req, res) => {
       offer,
       dimensions,
       other,
+      image: url,
     }
 
     const product = await ProductModel.create(newProduct)
@@ -180,6 +200,5 @@ module.exports = {
   postProduct,
   deleteProduct,
   upDateProduct,
-  uploadImage,
   configMulter,
 }
