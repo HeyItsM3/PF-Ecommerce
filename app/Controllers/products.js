@@ -1,7 +1,6 @@
 const { findByIdAndUpdate } = require('../Models/products')
-const { cloudinary } = require('../utils/utils')
+const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
-const streamifier = require('streamifier')
 
 const getAllProducts = async (req, res) => {
   const {
@@ -69,18 +68,6 @@ const postProduct = async (req, res) => {
     // if (!file) {
     //   res.satus(400).json({ msg: 'You have to upload a file' })
     // }
-    const streamUpload = (req) => {
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream((error, result) => {
-          if (result) {
-            resolve(result)
-          } else {
-            reject(error)
-          }
-        })
-        streamifier.createReadStream(req.file.buffer).pipe(stream)
-      })
-    }
     const { url } = await streamUpload(req)
 
     const newProduct = {
