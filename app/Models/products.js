@@ -5,6 +5,12 @@ const productSchema = new Schema({
     type: String,
     required: [true, 'name is required'],
   },
+  image: {
+    type: String,
+  },
+  public_id: {
+    type: String,
+  },
 })
 
 module.exports = model('Products', productSchema)
