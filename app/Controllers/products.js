@@ -1,4 +1,5 @@
 const { findByIdAndUpdate } = require('../Models/products')
+const { cloudinary } = require('../../utils/cloudinary')
 const ProductModel = require('../Models/products')
 
 // GET All Products // by name
@@ -45,19 +46,69 @@ const getProductDetail = async (req, res) => {
 
 // POST
 
+// const postProduct = async (req, res) => {
+//   const {
+//     body: { name, image },
+//   } = req
+
+//   try {
+//     const newProduct = {
+//       name,
+//       image,
+//     }
+
+//     const product = await ProductModel.create(newProduct)
+//     res.status(200).json({
+//       message: 'Successful request',
+//       product,
+//     })
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
+
 const postProduct = async (req, res) => {
   const {
-    body: { name },
+    body: {
+      name,
+      image,
+      brand,
+      description,
+      price,
+      amount,
+      condition,
+      model,
+      offer,
+      dimensions,
+      other,
+    },
   } = req
+
   try {
     const newProduct = {
       name,
+      image,
+      brand,
+      description,
+      price,
+      amount,
+      condition,
+      model,
+      offer,
+      dimensions,
+      other,
     }
+
+    console.log(newProduct)
+    // const uploadedResponse = await cloudinary.uploader.upload(image)
     const product = await ProductModel.create(newProduct)
-    res.status(200).json({
-      message: 'Successful request',
-      product,
-    })
+    console.log(product)
+    product
+      ? res.status(200).json({
+          message: 'Successful request',
+          product,
+        })
+      : res.status(404).json({ message: 'Error' })
   } catch (err) {
     console.log(err)
   }
