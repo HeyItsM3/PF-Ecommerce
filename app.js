@@ -14,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
+app.use(express.urlencoded({ limit: '50bm', extended: true }))
 
 //* ROUTES
 app.use('/api', router)

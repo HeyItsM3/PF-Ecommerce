@@ -32,8 +32,8 @@ const uploadImage = async (req, res, next) => {
     }
     const result = await streamUpload(req)
     res.status(200).json(result)
-  } catch (error) {
-    console.log('Filed to upload the image: ' + error)
+  } catch (err) {
+    res.status(500).json({ msg: 'Filed to upload the image:' + err })
   }
 }
 
@@ -55,7 +55,9 @@ const getAllProducts = async (req, res) => {
       res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-    console.log(err)
+    res
+      .status(500)
+      .json({ msg: 'Filed getAllProducts product controller' + err })
   }
 }
 
@@ -73,7 +75,9 @@ const getProductDetail = async (req, res) => {
           message: `Error Request, the product with the id:${id} was not found `,
         })
   } catch (err) {
-    console.log(err)
+    res
+      .status(500)
+      .json({ msg: 'Filed getProductDetail product controller' + err })
   }
 }
 
@@ -81,19 +85,45 @@ const getProductDetail = async (req, res) => {
 
 const postProduct = async (req, res) => {
   const {
-    body: { name },
+    body: {
+      name,
+      image,
+      brand,
+      description,
+      price,
+      amount,
+      condition,
+      model,
+      offer,
+      dimensions,
+      other,
+    },
   } = req
+
   try {
     const newProduct = {
       name,
+      image,
+      brand,
+      description,
+      price,
+      amount,
+      condition,
+      model,
+      offer,
+      dimensions,
+      other,
     }
+
     const product = await ProductModel.create(newProduct)
-    res.status(200).json({
-      message: 'Successful request',
-      product,
-    })
+    product
+      ? res.status(200).json({
+          message: 'Successful request',
+          product,
+        })
+      : res.status(404).json({ message: 'Error' })
   } catch (err) {
-    console.log(err)
+    res.status(500).json({ msg: 'Filed post product controller' + err })
   }
 }
 
@@ -114,7 +144,7 @@ const deleteProduct = async (req, res) => {
           message: `Error Request, the product with the id:${id} was not found `,
         })
   } catch (err) {
-    console.log(err)
+    res.status(500).json({ msg: 'Filed deleteProduct controller' + err })
   }
 }
 
@@ -140,7 +170,7 @@ const upDateProduct = async (req, res) => {
     Unable to update the product please check if the id is correct`,
         })
   } catch (err) {
-    console.log(err)
+    res.status(500).json({ msg: 'Filed upDateProduct controller' + err })
   }
 }
 
