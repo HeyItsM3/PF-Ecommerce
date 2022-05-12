@@ -1,6 +1,6 @@
 const UserModel = require('../Models/users')
 const { hashSync, compare } = require('bcrypt')
-const { access } = require('./helpers')
+const { access } = require('../utils/utils')
 
 const getAllUsers = async (req, res) => {
   try {

@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development nodemon ./api/app.js",
-    "dev": "cross-env NODE_ENV=production node ./api/app.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./api/app.js",
+    "start": "cross-env NODE_ENV=production node ./api/app.js",
     "lint": "eslint . --fix",
     "p-check": "prettier . --check",
     "p-write": "prettier . --write"
