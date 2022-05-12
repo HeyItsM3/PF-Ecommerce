@@ -1,6 +1,9 @@
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
+const jwt = require('jsonwebtoken')
+
+// CLOUDINARY CONFIGURATION
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -21,4 +24,19 @@ const streamUpload = (req) => {
   })
 }
 
-module.exports = { cloudinary, streamUpload }
+// JWT CONFIGURATION
+
+const access = (user) =>
+  jwt.sign(
+    {
+      id: user._id, // Mongo guarda en _doc nuestros documentos
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      isAdmin: user.isAdmin,
+    },
+    process.env.JWT_SEC_KEY,
+    { expiresIn: '5d' }
+  )
+
+module.exports = { cloudinary, streamUpload, access }
