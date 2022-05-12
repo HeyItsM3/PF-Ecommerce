@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon ./api/app.js",
-    "start": "cross-env NODE_ENV=production node ./api/app.js",
+    "start": "cross-env NODE_ENV=production node ./app.js",
     "lint": "eslint . --fix",
     "p-check": "prettier . --check",
     "p-write": "prettier . --write"
