@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./api/app.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./api/app.js",
+    "start": "cross-env NODE_ENV=production node ./api/app.js",
     "lint": "eslint . --fix",
     "p-check": "prettier . --check",
     "p-write": "prettier . --write"
@@ -14,12 +15,16 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.29.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "eslint": "^8.15.0",
