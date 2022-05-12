@@ -1,4 +1,7 @@
 const { Router } = require('express')
+const multer = require('multer')
+const storage = multer.memoryStorage()
+const configMulter = multer({ storage }).single('image')
 
 const {
   getAllProducts,
@@ -6,15 +9,12 @@ const {
   postProduct,
   upDateProduct,
   deleteProduct,
-  uploadImage,
-  configMulter,
 } = require('../Controllers/products')
 const router = Router()
 
 router.get('/', getAllProducts)
 router.get('/detail/:id', getProductDetail)
 router.post('/post', configMulter, postProduct)
-// router.post('/upload', configMulter, uploadImage)
 router.delete('/delete/:id', deleteProduct)
 router.put('/update/:id', upDateProduct)
 
