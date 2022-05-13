@@ -14,10 +14,6 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'password is required'],
   },
-  // token: {
-  //   type: Number,
-  //   required: [true, 'token is required'],
-  // }, ?
   phoneNumber: {
     type: String,
     required: [true, 'phoneNumber is required'],
