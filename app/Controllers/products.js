@@ -3,9 +3,7 @@ const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 
 const getAllProducts = async (req, res) => {
-  const {
-    query: { name },
-  } = req
+  const {name, filter, value} = req.query
   try {
     if (name) {
       const regex = new RegExp(name, 'i')
@@ -15,7 +13,16 @@ const getAllProducts = async (req, res) => {
         : res.status(404).json({
             message: `Error Request, the product with the name:${name} was not found `,
           })
-    } else {
+    } 
+    else if(filter === 'category'){
+      const products = await ProductModel.find({'category': value})
+      res.json(products)
+    }
+    else if(filter === 'brand'){
+      const products = await ProductModel.find({'brand': value})
+      res.json(products)
+    }
+    else {
       const product = await ProductModel.find()
       res.status(200).json({ message: 'Successful request', product })
     }
