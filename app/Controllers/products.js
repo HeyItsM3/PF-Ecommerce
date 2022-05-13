@@ -4,7 +4,7 @@ const ProductModel = require('../Models/products')
 // GET All Products // by name
 
 const getAllProducts = async (req, res) => {
-  const {name, filter, value} = req.query
+  const {name} = req.query
   try {
     if (name) {
       const regex = new RegExp(name, 'i')
@@ -15,14 +15,17 @@ const getAllProducts = async (req, res) => {
             message: `Error Request, the product with the name:${name} was not found `,
           })
     } 
-    else if(filter === 'category'){
-      const products = await ProductModel.find({'category': value})
-      res.json(products)
-    }
-    else if(filter === 'brand'){
-      const products = await ProductModel.find({'brand': value})
-      res.json(products)
-    }
+     // filter by brand
+     else if(req.query.filter){
+      const brandProducts = await ProductModel.find({ "brand": req.query.filter } )
+       res.json(brandProducts)
+  }
+    //order by price
+    else if(req.query.order){
+      console.log(req.query.order)
+      const orderByPrice = await ProductModel.find().sort({price: req.query.order})
+      res.json(orderByPrice)
+  }
     else {
       const product = await ProductModel.find()
       res.status(200).json({ message: 'Successful request', product })
