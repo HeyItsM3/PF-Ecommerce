@@ -93,7 +93,8 @@ const updateUser = async (req, res) => {
       user.isDeleted = isDeleted || user.name
 
       const changeUser = await user.save()
-      res.status(200).send({ msg: 'Your user has been updated', changeUser })
+      const { password, ...rest } = changeUser._doc
+      res.status(200).send({ msg: 'Your user has been updated', rest })
     } else {
       res.status(404).send({ msg: 'We cant find the user' })
     }
