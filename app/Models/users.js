@@ -14,10 +14,6 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'password is required'],
   },
-  // token: {
-  //   type: Number,
-  //   required: [true, 'token is required'],
-  // }, ?
   phoneNumber: {
     type: String,
     required: [true, 'phoneNumber is required'],
@@ -31,6 +27,11 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
     required: false,
+  },
+  isDeleted: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 })
 

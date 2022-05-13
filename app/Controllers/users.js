@@ -1,6 +1,8 @@
 const UserModel = require('../Models/users')
 const { hashSync, compare } = require('bcrypt')
-const { access } = require('./helpers')
+const { access } = require('../utils/utils')
+
+// GET ALL USERS
 
 const getAllUsers = async (req, res) => {
   try {
@@ -10,6 +12,8 @@ const getAllUsers = async (req, res) => {
     console.log(err)
   }
 }
+
+// REGISTER USER
 
 const registerUser = async (req, res) => {
   const { name, password, email, phoneNumber } = req.body
@@ -47,7 +51,9 @@ const registerUser = async (req, res) => {
   }
 }
 
-const loginUser = async (req, res, next) => {
+// LOGIN USER
+
+const loginUser = async (req, res) => {
   const { email, password } = req.body
   try {
     // Find user email
@@ -56,20 +62,50 @@ const loginUser = async (req, res, next) => {
     })
     // Check if the password is right
     if (user && (await compare(password, user.password))) {
+      const { password, ...rest } = user._doc
       res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        isAdmin: user.isAdmin,
+        rest,
         token: access(user),
       })
     } else {
-      res.status(401).send({ message: 'Invalid email or password' })
+      res.status(401).send({ msg: 'Invalid email or password' })
     }
   } catch (err) {
     res.status(500).json({ msg: 'Error in login user: ' + err })
   }
 }
 
-module.exports = { getAllUsers, registerUser, loginUser }
+// UPDATE USER
+
+const updateUser = async (req, res) => {
+  const {
+    params: { id },
+    body: { name, email, phoneNumber, isSeller, isAdmin, isDeleted },
+  } = req
+  try {
+    const user = await UserModel.findById(id)
+    if (user) {
+      user.name = name || user.name
+      user.email = email || user.name
+      user.phoneNumber = phoneNumber || user.name
+      user.isSeller = isSeller || user.name
+      user.isAdmin = isAdmin || user.name
+      user.isDeleted = isDeleted || user.name
+
+      const changeUser = await user.save()
+      const { password, ...rest } = changeUser._doc
+      res.status(200).send({ msg: 'Your user has been updated', rest })
+    } else {
+      res.status(404).send({ msg: 'We cant find the user' })
+    }
+  } catch (err) {
+    res.status(500).json({ msg: 'Error in disableUser: ' + err })
+  }
+}
+
+module.exports = {
+  getAllUsers,
+  registerUser,
+  loginUser,
+  updateUser,
+}
