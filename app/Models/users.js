@@ -28,6 +28,11 @@ const userSchema = new Schema({
     default: false,
     required: false,
   },
+  isDeleted: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 })
 
 module.exports = model('Users', userSchema)

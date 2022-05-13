@@ -29,7 +29,7 @@ const getAllProducts = async (req, res) => {
   } catch (err) {
     res
       .status(500)
-      .json({ msg: 'Filed getAllProducts product controller' + err })
+      .json({ msg: 'Failed to getAllProducts product controller' + err })
   }
 }
 
@@ -49,7 +49,7 @@ const getProductDetail = async (req, res) => {
   } catch (err) {
     res
       .status(500)
-      .json({ msg: 'Filed getProductDetail product controller' + err })
+      .json({ msg: 'Failed to getProductDetail product controller' + err })
   }
 }
 
@@ -99,7 +99,7 @@ const postProduct = async (req, res) => {
         })
       : res.status(404).json({ message: 'Error' })
   } catch (err) {
-    res.status(500).json({ msg: 'Filed post product controller' + err })
+    res.status(500).json({ msg: 'Failed to post product controller' + err })
   }
 }
 
@@ -120,7 +120,7 @@ const deleteProduct = async (req, res) => {
           message: `Error Request, the product with the id:${id} was not found `,
         })
   } catch (err) {
-    res.status(500).json({ msg: 'Filed deleteProduct controller' + err })
+    res.status(500).json({ msg: 'Failed to deleteProduct controller' + err })
   }
 }
 
@@ -137,16 +137,14 @@ const upDateProduct = async (req, res) => {
     }
     const product = await findByIdAndUpdate(id, productUpdate, { new: true })
     product
-      ? res.status(200).json({
-          message: `
-    The user with id: ${id} was successfully updated`,
-        })
+      ? res
+          .status(200)
+          .json({ msg: `The user with id: ${id} was successfully updated` })
       : res.status(404).json({
-          message: `
-    Unable to update the product please check if the id is correct`,
+          msg: `Unable to update the product please check if the id is correct`,
         })
   } catch (err) {
-    res.status(500).json({ msg: 'Filed upDateProduct controller' + err })
+    res.status(500).json({ msg: 'Failed to upDateProduct controller' + err })
   }
 }
 
