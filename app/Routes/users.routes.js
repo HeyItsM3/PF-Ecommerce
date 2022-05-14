@@ -1,10 +1,6 @@
 const { Router } = require('express')
-const {
-  getAllUsers,
-  registerUser,
-  loginUser,
-  updateUser,
-} = require('../Controllers/users')
+const { getAllUsers, updateUser } = require('../Controllers/users')
+const { registerUser, loginUser } = require('../Controllers/auth')
 const router = Router()
 
 router.get('/', getAllUsers)
