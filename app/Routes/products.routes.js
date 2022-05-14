@@ -1,12 +1,15 @@
 const { Router } = require('express')
 const { validateCreateProduct } = require('../validators/products')
+const multer = require('multer')
+const storage = multer.memoryStorage()
+const configMulter = multer({ storage }).single('image')
+
 const {
   getAllProducts,
   getProductDetail,
   postProduct,
   upDateProduct,
   deleteProduct,
-  configMulter,
 } = require('../Controllers/products')
 const router = Router()
 

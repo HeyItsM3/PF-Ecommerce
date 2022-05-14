@@ -1,19 +1,13 @@
 const { findByIdAndUpdate } = require('../Models/products')
-const { cloudinary } = require('../utils/utils')
+const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
-const streamifier = require('streamifier')
-const multer = require('multer')
-const storage = multer.memoryStorage()
-const configMulter = multer({ storage }).single('image')
 
 // // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
 // // En este caso ingresa por el input de tipo image
 
 // GET Products
 const getAllProducts = async (req, res) => {
-  const {
-    query: { name },
-  } = req
+  const { name } = req.query
   try {
     if (name) {
       const regex = new RegExp(name, 'i')
@@ -23,6 +17,19 @@ const getAllProducts = async (req, res) => {
         : res.status(404).json({
             message: `Error Request, the product with the name:${name} was not found `,
           })
+    }
+    // filter by brand
+    else if (req.query.filter) {
+      const brandProducts = await ProductModel.find({ brand: req.query.filter })
+      res.json(brandProducts)
+    }
+    // order by price
+    else if (req.query.order) {
+      console.log(req.query.order)
+      const orderByPrice = await ProductModel.find().sort({
+        price: req.query.order,
+      })
+      res.json(orderByPrice)
     } else {
       const product = await ProductModel.find()
       res.status(200).json({ message: 'Successful request', product })
@@ -65,7 +72,6 @@ const postProduct = async (req, res) => {
   const {
     body: {
       name,
-      image,
       brand,
       description,
       price,
@@ -80,68 +86,33 @@ const postProduct = async (req, res) => {
   } = req
 
   try {
-    if (
-      !name &&
-      !image &&
-      !brand &&
-      !description &&
-      !price &&
-      !amount &&
-      !condition &&
-      !model &&
-      !offer &&
-      !dimensions &&
-      !category
-      // eslint-disable-next-line no-empty
-    ) {
-      res
-        .status(404)
-        .json({ message: 'Error, a required data was not found', error: true })
-    } else {
-      if (!req.file) {
-        res.satus(400).json({ msg: 'You have to upload a file', error: true })
-      } else {
-        const streamUpload = (req) => {
-          return new Promise((resolve, reject) => {
-            const stream = cloudinary.uploader.upload_stream(
-              (error, result) => {
-                if (result) {
-                  resolve(result)
-                } else {
-                  reject(error)
-                }
-              }
-            )
-            streamifier.createReadStream(req.file.buffer).pipe(stream)
-          })
-        }
-        const { url } = await streamUpload(req)
-        console.log(url)
+    // if (!file) {
+    //   res.satus(400).json({ msg: 'You have to upload a file' })
+    // }
+    const { url } = await streamUpload(req)
 
-        const newProduct = {
-          name,
-          brand,
-          description,
-          price,
-          amount,
-          category,
-          condition,
-          model,
-          offer,
-          dimensions,
-          other,
-          image: url,
-        }
-
-        const product = await ProductModel.create(newProduct)
-        product
-          ? res.status(202).json({
-              message: 'Successful request',
-              product,
-            })
-          : res.status(404).json({ message: 'Error' })
-      }
+    const newProduct = {
+      name,
+      brand,
+      description,
+      price,
+      amount,
+      category,
+      condition,
+      model,
+      offer,
+      dimensions,
+      other,
+      image: url,
     }
+
+    const product = await ProductModel.create(newProduct)
+    product
+      ? res.status(202).json({
+          message: 'Successful request',
+          product,
+        })
+      : res.status(404).json({ message: 'Error' })
   } catch (err) {
     res
       .status(500)
@@ -185,13 +156,11 @@ const upDateProduct = async (req, res) => {
     }
     const product = await findByIdAndUpdate(id, productUpdate, { new: true })
     product
-      ? res.status(200).json({
-          message: `
-    The user with id: ${id} was successfully updated`,
-        })
+      ? res
+          .status(200)
+          .json({ msg: `The user with id: ${id} was successfully updated` })
       : res.status(404).json({
-          message: `
-    Unable to update the product please check if the id is correct`,
+          msg: `Unable to update the product please check if the id is correct`,
         })
   } catch (err) {
     res
@@ -206,5 +175,4 @@ module.exports = {
   postProduct,
   deleteProduct,
   upDateProduct,
-  configMulter,
 }
