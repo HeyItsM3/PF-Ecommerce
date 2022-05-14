@@ -16,20 +16,20 @@ const getAllProducts = async (req, res) => {
     } 
      // filter by brand
      else if(req.query.filter){
-      const brandProducts = await ProductModel.find({ "brand": req.query.filter } )
+      const products = await ProductModel.find({ "brand": req.query.filter } )
        return res.json(brandProducts)
   }
     //order by price
     else if(req.query.order){
-      const orderByPrice = await ProductModel.find().sort({price: req.query.order})
+      const products = await ProductModel.find().sort({price: req.query.order})
       return res.json(orderByPrice)
   }
     else {
       const product = await ProductModel.find()
-      res.status(200).json({ message: 'Successful request', product })
+      return res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-    res
+    return res
       .status(500)
       .json({ msg: 'Failed to getAllProducts product controller' + err })
   }
