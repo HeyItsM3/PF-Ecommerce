@@ -17,12 +17,12 @@ const getAllProducts = async (req, res) => {
      // filter by brand
      else if(req.query.filter){
       const products = await ProductModel.find({ "brand": req.query.filter } )
-       return res.json(brandProducts)
+       return res.json(products)
   }
     //order by price
     else if(req.query.order){
       const products = await ProductModel.find().sort({price: req.query.order})
-      return res.json(orderByPrice)
+      return res.json(products)
   }
     else {
       const product = await ProductModel.find()
