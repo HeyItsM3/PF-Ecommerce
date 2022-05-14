@@ -2,8 +2,12 @@ const { findByIdAndUpdate } = require('../Models/products')
 const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 
+// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
+// // En este caso ingresa por el input de tipo image
+
+// GET Products
 const getAllProducts = async (req, res) => {
-  const {name} = req.query
+  const { name } = req.query
   try {
     if (name) {
       const regex = new RegExp(name, 'i')
@@ -13,26 +17,28 @@ const getAllProducts = async (req, res) => {
         : res.status(404).json({
             message: `Error Request, the product with the name:${name} was not found `,
           })
-    } 
-     // filter by brand
-     else if(req.query.filter){
-      const brandProducts = await ProductModel.find({ "brand": req.query.filter } )
-       res.json(brandProducts)
-  }
-    //order by price
-    else if(req.query.order){
+    }
+    // filter by brand
+    else if (req.query.filter) {
+      const brandProducts = await ProductModel.find({ brand: req.query.filter })
+      res.json(brandProducts)
+    }
+    // order by price
+    else if (req.query.order) {
       console.log(req.query.order)
-      const orderByPrice = await ProductModel.find().sort({price: req.query.order})
+      const orderByPrice = await ProductModel.find().sort({
+        price: req.query.order,
+      })
       res.json(orderByPrice)
-  }
-    else {
+    } else {
       const product = await ProductModel.find()
       res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-    res
-      .status(500)
-      .json({ msg: 'Failed to getAllProducts product controller' + err })
+    res.status(500).json({
+      msg: 'Filed getAllProducts product controller' + err,
+      error: true,
+    })
   }
 }
 
@@ -45,14 +51,18 @@ const getProductDetail = async (req, res) => {
   try {
     const product = await ProductModel.findById(id)
     product
-      ? res.status(200).json({ message: 'Successful request', product })
+      ? res
+          .status(200)
+          .json({ message: 'Successful request', product, error: false })
       : res.status(404).json({
-          message: `Error Request, the product with the id:${id} was not found `,
+          message: `Error Request, the product with the id:${id} was not found, `,
+          error: true,
         })
   } catch (err) {
-    res
-      .status(500)
-      .json({ msg: 'Failed to getProductDetail product controller' + err })
+    res.status(500).json({
+      msg: 'Filed getProductDetail product controller' + err,
+      error: true,
+    })
   }
 }
 
@@ -71,6 +81,7 @@ const postProduct = async (req, res) => {
       offer,
       dimensions,
       other,
+      category,
     },
   } = req
 
@@ -86,6 +97,7 @@ const postProduct = async (req, res) => {
       description,
       price,
       amount,
+      category,
       condition,
       model,
       offer,
@@ -96,13 +108,15 @@ const postProduct = async (req, res) => {
 
     const product = await ProductModel.create(newProduct)
     product
-      ? res.status(200).json({
+      ? res.status(202).json({
           message: 'Successful request',
           product,
         })
       : res.status(404).json({ message: 'Error' })
   } catch (err) {
-    res.status(500).json({ msg: 'Failed to post product controller' + err })
+    res
+      .status(500)
+      .json({ msg: 'Filed post product controller' + err, error: true })
   }
 }
 
@@ -123,7 +137,9 @@ const deleteProduct = async (req, res) => {
           message: `Error Request, the product with the id:${id} was not found `,
         })
   } catch (err) {
-    res.status(500).json({ msg: 'Failed to deleteProduct controller' + err })
+    res
+      .status(500)
+      .json({ msg: 'Filed deleteProduct controller' + err, error: true })
   }
 }
 
@@ -147,7 +163,9 @@ const upDateProduct = async (req, res) => {
           msg: `Unable to update the product please check if the id is correct`,
         })
   } catch (err) {
-    res.status(500).json({ msg: 'Failed to upDateProduct controller' + err })
+    res
+      .status(500)
+      .json({ msg: 'Filed upDateProduct controller' + err, error: true })
   }
 }
 
