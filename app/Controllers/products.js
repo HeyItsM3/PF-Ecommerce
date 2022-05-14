@@ -21,7 +21,6 @@ const getAllProducts = async (req, res) => {
   }
     //order by price
     else if(req.query.order){
-      console.log(req.query.order)
       const orderByPrice = await ProductModel.find().sort({price: req.query.order})
       return res.json(orderByPrice)
   }
