@@ -17,49 +17,26 @@ const getAllProducts = async (req, res) => {
         : res.status(404).json({
             message: `Error Request, the product with the name:${name} was not found `,
           })
-<<<<<<< HEAD
     }
     // filter by brand
     else if (req.query.filter) {
-      const brandProducts = await ProductModel.find({ brand: req.query.filter })
-      res.json(brandProducts)
+      const products = await ProductModel.find({ brand: req.query.filter })
+      return res.json(products)
     }
     // order by price
     else if (req.query.order) {
-      console.log(req.query.order)
-      const orderByPrice = await ProductModel.find().sort({
+      const products = await ProductModel.find().sort({
         price: req.query.order,
       })
-      res.json(orderByPrice)
-    } else {
-=======
-    } 
-     // filter by brand
-     else if(req.query.filter){
-      const products = await ProductModel.find({ "brand": req.query.filter } )
-       return res.json(products)
-  }
-    //order by price
-    else if(req.query.order){
-      const products = await ProductModel.find().sort({price: req.query.order})
       return res.json(products)
-  }
-    else {
->>>>>>> b88383d22e062962a1d0fe74be43843a055c38e6
+    } else {
       const product = await ProductModel.find()
       return res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-<<<<<<< HEAD
-    res.status(500).json({
-      msg: 'Filed getAllProducts product controller' + err,
-      error: true,
-    })
-=======
     return res
       .status(500)
       .json({ msg: 'Failed to getAllProducts product controller' + err })
->>>>>>> b88383d22e062962a1d0fe74be43843a055c38e6
   }
 }
 
