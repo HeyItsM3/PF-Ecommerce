@@ -9,6 +9,7 @@ const morgan = require('morgan')
 const PORT = process.env.PORT || 4000
 const { dbConnect } = require('./config/mongo')
 const router = require('./app/Routes')
+
 //* MIDDLEWARE
 app.use(cors())
 app.use(express.json())

@@ -1,6 +1,6 @@
 const UserModel = require('../Models/users')
 const { hashSync, compare } = require('bcrypt')
-const { access } = require('../utils/utils')
+const { createToken } = require('../utils/utils')
 
 // REGISTER USER
 
@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
         email: user.email,
         phoneNumber: user.phoneNumber,
         isAdmin: user.isAdmin,
-        token: access(user),
+        token: createToken(user),
       })
     } catch (error) {
       res
@@ -51,10 +51,14 @@ const loginUser = async (req, res) => {
     })
     // Check if the password is right
     if (user && (await compare(password, user.password))) {
-      const { password, ...rest } = user._doc
-      res.status(200).json({
-        rest,
-        token: access(user),
+      // const { password, ...rest } = user._doc
+      const token = createToken(user)
+      // res.status(200).json({
+      //   rest,
+      //   token,
+      // })
+      res.header('auth-token', token).json({
+        data: { token },
       })
     } else {
       res.status(401).send({ msg: 'Invalid email or password' })

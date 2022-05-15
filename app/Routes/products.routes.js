@@ -19,4 +19,7 @@ router.post('/post', configMulter, validateCreateProduct, postProduct)
 router.delete('/delete/:id', deleteProduct)
 router.put('/update/:id', upDateProduct)
 
+// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
+// // En este caso ingresa por el input de tipo image
+
 module.exports = router
