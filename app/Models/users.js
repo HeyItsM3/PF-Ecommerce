@@ -18,19 +18,14 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'phoneNumber is required'],
   },
-  isSeller: {
-    type: Boolean,
-    default: false,
-    required: false,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-    required: false,
+  role: {
+    type: String,
+    default: 'visitant',
+    enum: ['visitant', 'seller', 'admin'],
   },
   isDeleted: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   },
 })

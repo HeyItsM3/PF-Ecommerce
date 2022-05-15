@@ -1,11 +1,11 @@
 const UserModel = require('../Models/users')
 const { hashSync, compare } = require('bcrypt')
-const { access } = require('../utils/utils')
+const { createToken } = require('../utils/utils')
 
 // REGISTER USER
 
 const registerUser = async (req, res) => {
-  const { name, password, email, phoneNumber } = req.body
+  const { name, password, email, phoneNumber, role } = req.body
 
   // Verify if the email already exists
   const verifyUser = await UserModel.findOne({ email })
@@ -18,6 +18,7 @@ const registerUser = async (req, res) => {
       name,
       phoneNumber,
       email,
+      role,
       password: hashSync(password, 10),
     })
     try {
@@ -27,8 +28,8 @@ const registerUser = async (req, res) => {
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
-        isAdmin: user.isAdmin,
-        token: access(user),
+        role: user.role,
+        token: createToken(user),
       })
     } catch (error) {
       res
@@ -51,10 +52,12 @@ const loginUser = async (req, res) => {
     })
     // Check if the password is right
     if (user && (await compare(password, user.password))) {
+      console.log(user)
       const { password, ...rest } = user._doc
+      const token = createToken(user)
       res.status(200).json({
         rest,
-        token: access(user),
+        token,
       })
     } else {
       res.status(401).send({ msg: 'Invalid email or password' })

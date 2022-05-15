@@ -2,9 +2,6 @@ const { findByIdAndUpdate } = require('../Models/products')
 const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 
-// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
-// // En este caso ingresa por el input de tipo image
-
 // GET Products
 const getAllProducts = async (req, res) => {
   const { name } = req.query
@@ -84,9 +81,9 @@ const postProduct = async (req, res) => {
   } = req
 
   try {
-    // if (!file) {
-    //   res.satus(400).json({ msg: 'You have to upload a file' })
-    // }
+    if (!req.file) {
+      return res.status(400).json({ msg: 'You have to upload an image' })
+    }
     const { url } = await streamUpload(req)
 
     const newProduct = {
