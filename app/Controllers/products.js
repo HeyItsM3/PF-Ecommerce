@@ -81,9 +81,9 @@ const postProduct = async (req, res) => {
   } = req
 
   try {
-    // if (!req.file) {
-    //   res.satus(400).json({ msg: 'You have to upload a file' })
-    // }
+    if (!req.file) {
+      return res.status(400).json({ msg: 'You have to upload an image' })
+    }
     const { url } = await streamUpload(req)
 
     const newProduct = {
