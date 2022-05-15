@@ -16,7 +16,7 @@ const getAllUsers = async (req, res) => {
 const updateUser = async (req, res) => {
   const {
     params: { id },
-    body: { name, email, phoneNumber, isSeller, isAdmin, isDeleted },
+    body: { name, email, phoneNumber, isDeleted, role },
   } = req
   try {
     const user = await UserModel.findById(id)
@@ -24,8 +24,7 @@ const updateUser = async (req, res) => {
       user.name = name || user.name
       user.email = email || user.email
       user.phoneNumber = phoneNumber || user.phoneNumber
-      user.isSeller = isSeller
-      user.isAdmin = isAdmin
+      user.role = role || user.role
       user.isDeleted = isDeleted
 
       const changeUser = await user.save()

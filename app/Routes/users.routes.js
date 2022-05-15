@@ -6,7 +6,7 @@ const router = Router()
 
 router.get('/', isAdmin, getAllUsers)
 router.post('/login', loginUser)
-router.post('/register', isAuth, registerUser)
-router.put('/update/:id', isAdmin, updateUser)
+router.post('/register', registerUser)
+router.put('/update/:id', isAuth, updateUser)
 
 module.exports = router
