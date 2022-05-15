@@ -23,7 +23,7 @@ const productSchema = new Schema({
   },
   condition: {
     type: String,
-    enum: ['good', 'disrepair', 'used'],
+    enum: ['new', 'used'],
     required: [true, 'condition is required'],
   },
   model: {
@@ -36,6 +36,24 @@ const productSchema = new Schema({
   },
   dimensions: {
     type: mongoose.Types.Decimal128,
+  },
+  category: {
+    type: String,
+    enum: [
+      'art',
+      'Bookstore and haberdashery',
+      'cards',
+      'motorcycle and others',
+      'beauty and personal care',
+      'sports and fitness',
+      'home appliances',
+      'home furniture and garden',
+      'fashion',
+      'kids',
+      'other',
+      'technology',
+    ],
+    required: [true, 'category is required'],
   },
   image: {
     type: String,

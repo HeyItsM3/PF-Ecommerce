@@ -2,10 +2,9 @@ const { findByIdAndUpdate } = require('../Models/products')
 const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 
+// GET Products
 const getAllProducts = async (req, res) => {
-  const {
-    query: { name },
-  } = req
+  const { name } = req.query
   try {
     if (name) {
       const regex = new RegExp(name, 'i')
@@ -15,14 +14,26 @@ const getAllProducts = async (req, res) => {
         : res.status(404).json({
             message: `Error Request, the product with the name:${name} was not found `,
           })
+    }
+    // filter by brand
+    else if (req.query.filter) {
+      const products = await ProductModel.find({ brand: req.query.filter })
+      return res.json(products)
+    }
+    // order by price
+    else if (req.query.order) {
+      const products = await ProductModel.find().sort({
+        price: req.query.order,
+      })
+      return res.json(products)
     } else {
       const product = await ProductModel.find()
-      res.status(200).json({ message: 'Successful request', product })
+      return res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-    res
+    return res
       .status(500)
-      .json({ msg: 'Filed getAllProducts product controller' + err })
+      .json({ msg: 'Failed to getAllProducts product controller' + err })
   }
 }
 
@@ -35,14 +46,18 @@ const getProductDetail = async (req, res) => {
   try {
     const product = await ProductModel.findById(id)
     product
-      ? res.status(200).json({ message: 'Successful request', product })
+      ? res
+          .status(200)
+          .json({ message: 'Successful request', product, error: false })
       : res.status(404).json({
-          message: `Error Request, the product with the id:${id} was not found `,
+          message: `Error Request, the product with the id:${id} was not found, `,
+          error: true,
         })
   } catch (err) {
-    res
-      .status(500)
-      .json({ msg: 'Filed getProductDetail product controller' + err })
+    res.status(500).json({
+      msg: 'Filed getProductDetail product controller' + err,
+      error: true,
+    })
   }
 }
 
@@ -61,13 +76,14 @@ const postProduct = async (req, res) => {
       offer,
       dimensions,
       other,
+      category,
     },
   } = req
 
   try {
-    // if (!file) {
-    //   res.satus(400).json({ msg: 'You have to upload a file' })
-    // }
+    if (!req.file) {
+      return res.status(400).json({ msg: 'You have to upload an image' })
+    }
     const { url } = await streamUpload(req)
 
     const newProduct = {
@@ -76,6 +92,7 @@ const postProduct = async (req, res) => {
       description,
       price,
       amount,
+      category,
       condition,
       model,
       offer,
@@ -86,13 +103,15 @@ const postProduct = async (req, res) => {
 
     const product = await ProductModel.create(newProduct)
     product
-      ? res.status(200).json({
+      ? res.status(202).json({
           message: 'Successful request',
           product,
         })
       : res.status(404).json({ message: 'Error' })
   } catch (err) {
-    res.status(500).json({ msg: 'Filed post product controller' + err })
+    res
+      .status(500)
+      .json({ msg: 'Filed post product controller' + err, error: true })
   }
 }
 
@@ -113,7 +132,9 @@ const deleteProduct = async (req, res) => {
           message: `Error Request, the product with the id:${id} was not found `,
         })
   } catch (err) {
-    res.status(500).json({ msg: 'Filed deleteProduct controller' + err })
+    res
+      .status(500)
+      .json({ msg: 'Filed deleteProduct controller' + err, error: true })
   }
 }
 
@@ -130,16 +151,16 @@ const upDateProduct = async (req, res) => {
     }
     const product = await findByIdAndUpdate(id, productUpdate, { new: true })
     product
-      ? res.status(200).json({
-          message: `
-    The user with id: ${id} was successfully updated`,
-        })
+      ? res
+          .status(200)
+          .json({ msg: `The user with id: ${id} was successfully updated` })
       : res.status(404).json({
-          message: `
-    Unable to update the product please check if the id is correct`,
+          msg: `Unable to update the product please check if the id is correct`,
         })
   } catch (err) {
-    res.status(500).json({ msg: 'Filed upDateProduct controller' + err })
+    res
+      .status(500)
+      .json({ msg: 'Filed upDateProduct controller' + err, error: true })
   }
 }
 
