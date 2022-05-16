@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { validateCreateProduct } = require('../validators/products')
-const { isSeller } = require('../middleware/authentication')
+// const { isSeller } = require('../middleware/authentication')
 const multer = require('multer')
 const storage = multer.memoryStorage()
 const maxSize = 2 * 1024 * 1024
@@ -39,9 +39,9 @@ const router = Router()
 
 router.get('/', getAllProducts)
 router.get('/detail/:id', getProductDetail)
-router.post('/post', isSeller, configMulter, validateCreateProduct, postProduct)
-router.delete('/delete/:id', isSeller, deleteProduct)
-router.put('/update/:id', isSeller, upDateProduct)
+router.post('/post', configMulter, validateCreateProduct, postProduct) // add isSeller
+router.delete('/delete/:id', deleteProduct) // add isSeller
+router.put('/update/:id', upDateProduct) // add isSeller
 
 // || user.role === 'admin'
 module.exports = router
