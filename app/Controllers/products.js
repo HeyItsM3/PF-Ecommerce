@@ -68,7 +68,7 @@ const getProductDetail = async (req, res) => {
 
 // POST
 
-const postProduct = async (req, res) => {
+const postProduct = async (req, res, next) => {
   const {
     body: {
       name,
@@ -112,17 +112,19 @@ const postProduct = async (req, res) => {
           message: 'Successful request',
           product,
         })
-      : res.status(404).json({ message: 'Error' })
+      : next(
+          new Error(
+            'The product variable is empty, check for an error in the load.'
+          )
+        )
   } catch (err) {
-    res
-      .status(500)
-      .json({ msg: 'Filed post product controller' + err, error: true })
+    next(new Error('Did not work product creation'))
   }
 }
 
 // DELETE
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
   const {
     params: { id },
   } = req
@@ -133,19 +135,18 @@ const deleteProduct = async (req, res) => {
       ? res.status(200).json({
           message: `Successful request, the product with the id:${id} was deleted`,
         })
-      : res.status(404).json({
-          message: `Error Request, the product with the id:${id} was not found `,
-        })
+      : next(
+          new Error(
+            `Error Request, the product with the id:${id} was not found `
+          )
+        )
   } catch (err) {
-    res
-      .status(500)
-      .json({ msg: 'Filed deleteProduct controller' + err, error: true })
+    next(new Error('Filed deleteProduct controller'))
   }
 }
-
 // UPDATE
 
-const upDateProduct = async (req, res) => {
+const upDateProduct = async (req, res, next) => {
   const {
     params: { id },
     body: { name },
@@ -159,13 +160,13 @@ const upDateProduct = async (req, res) => {
       ? res
           .status(200)
           .json({ msg: `The user with id: ${id} was successfully updated` })
-      : res.status(404).json({
-          msg: `Unable to update the product please check if the id is correct`,
-        })
+      : next(
+          new Error(
+            `Unable to update the product please check if the id is correct`
+          )
+        )
   } catch (err) {
-    res
-      .status(500)
-      .json({ msg: 'Filed upDateProduct controller' + err, error: true })
+    next(new Error('Filed upDateProduct controller'))
   }
 }
 
