@@ -9,10 +9,14 @@ const morgan = require('morgan')
 const PORT = process.env.PORT || 4000
 const { dbConnect } = require('./config/mongo')
 const router = require('./app/Routes')
+<<<<<<< HEAD
 const {
   middlewareError,
   handleError,
 } = require('./app/Error/middleware/Errors')
+=======
+
+>>>>>>> origin/dev
 //* MIDDLEWARE
 app.use(cors())
 app.use(express.json())
