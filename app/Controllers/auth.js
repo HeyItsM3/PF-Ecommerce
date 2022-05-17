@@ -4,14 +4,8 @@ const { createToken } = require('../utils/utils')
 
 // REGISTER USER
 
-<<<<<<< HEAD
 const registerUser = async (req, res, next) => {
   const { name, password, email, phoneNumber } = req.body
-=======
-const registerUser = async (req, res) => {
-  const { name, password, email, phoneNumber, role } = req.body
-
->>>>>>> origin/dev
   // Verify if the email already exists
   const verifyUser = await UserModel.findOne({ email })
   verifyUser && next(new Error('The email already exists.'))
