@@ -3,25 +3,29 @@ const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 
 // GET Products
-const getAllProducts = async (req, res) => {
-  const { name } = req.query
+const getAllProducts = async (req, res, next) => {
+  const {
+    query: { name, filter, order },
+  } = req.query
   try {
     if (name) {
       const regex = new RegExp(name, 'i')
       const products = await ProductModel.find({ name: { $regex: regex } })
       products
         ? res.status(200).json({ message: `Successful request`, products })
-        : res.status(404).json({
-            message: `Error Request, the product with the name:${name} was not found `,
-          })
+        : next(
+            new Error(
+              `Error Request, the product with the name:${name} was not found `
+            )
+          )
     }
     // filter by brand
-    else if (req.query.filter) {
+    else if (filter) {
       const products = await ProductModel.find({ brand: req.query.filter })
       return res.json(products)
     }
     // order by price
-    else if (req.query.order) {
+    else if (order) {
       const products = await ProductModel.find().sort({
         price: req.query.order,
       })
@@ -31,15 +35,13 @@ const getAllProducts = async (req, res) => {
       return res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-    return res
-      .status(500)
-      .json({ msg: 'Failed to getAllProducts product controller' + err })
+    next(new Error(`Failed to getAllProducts product controller`))
   }
 }
 
 // GET DETAIL
 
-const getProductDetail = async (req, res) => {
+const getProductDetail = async (req, res, next) => {
   const {
     params: { id },
   } = req
@@ -49,15 +51,13 @@ const getProductDetail = async (req, res) => {
       ? res
           .status(200)
           .json({ message: 'Successful request', product, error: false })
-      : res.status(404).json({
-          message: `Error Request, the product with the id:${id} was not found, `,
-          error: true,
-        })
+      : next(
+          new Error(
+            `Error Request, the product with the id:${id} was not found, `
+          )
+        )
   } catch (err) {
-    res.status(500).json({
-      msg: 'Filed getProductDetail product controller' + err,
-      error: true,
-    })
+    next(new Error('Filed getProductDetail product controller'))
   }
 }
 
