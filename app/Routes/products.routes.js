@@ -11,7 +11,7 @@ const configMulter = multer({ storage,     fileFilter: (req, file, cb) => {
           return cb(new Error({message:'Only .png, .jpg and .jpeg format allowed!', error:true}));
         }
       },
-      limits: { fileSize: maxSize }}).single('image')
+      limits: { fileSize: maxSize }}).array('image', 6)
 
 const {
   getAllProducts,

@@ -5,7 +5,7 @@ const UserModel = require('../Models/users')
 const getAllUsers = async (req, res) => {
   try {
     const user = await UserModel.find()
-    res.status(200).json({ message: 'Request exitosa', user })
+    res.status(200).json({ message: 'Successful request', user })
   } catch (err) {
     console.log(err)
   }

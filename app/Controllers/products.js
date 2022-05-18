@@ -87,6 +87,7 @@ const postProduct = async (req, res) => {
     // if (!file) {
     //   res.satus(400).json({ msg: 'You have to upload a file' })
     // }
+    
     const { url } = await streamUpload(req)
 
     const newProduct = {

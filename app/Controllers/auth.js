@@ -1,6 +1,8 @@
 const UserModel = require('../Models/users')
 const { hashSync, compare } = require('bcrypt')
 const { access } = require('../utils/utils')
+// const nodemailer = require ('nodemailer')
+const { sendRegisterEmail } = require ('../nodemailer/nodemailer')
 
 // REGISTER USER
 
@@ -30,6 +32,9 @@ const registerUser = async (req, res) => {
         isAdmin: user.isAdmin,
         token: access(user),
       })
+      sendRegisterEmail(
+        user.name,
+        user.email);
     } catch (error) {
       res
         .status(500)
