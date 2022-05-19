@@ -4,13 +4,11 @@ const { createToken } = require('../utils/utils')
 
 // REGISTER USER
 
-const registerUser = async (req, res) => {
-  const { name, password, email, phoneNumber, role } = req.body
-
+const registerUser = async (req, res, next) => {
+  const { name, password, email, phoneNumber } = req.body
   // Verify if the email already exists
   const verifyUser = await UserModel.findOne({ email })
-  if (verifyUser)
-    return res.status(400).json({ msg: 'The email already exists.' })
+  verifyUser && next(new Error('The email already exists.'))
 
   // Check all the fields before create
   if (name && email && password) {
@@ -32,18 +30,16 @@ const registerUser = async (req, res) => {
         token: createToken(user),
       })
     } catch (error) {
-      res
-        .status(500)
-        .json({ msg: 'Error trying to create a new user: ' + error })
+      next(new Error('Error trying to create a new user'))
     }
   } else {
-    res.status(400).json('You need to provide all the information')
+    next(new Error('You need to provide all the information'))
   }
 }
 
 // LOGIN USER
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body
   try {
     // Find user email
@@ -60,10 +56,10 @@ const loginUser = async (req, res) => {
         msg: 'User Logged in successfully',
       })
     } else {
-      res.status(401).send({ msg: 'Invalid email or password' })
+      next(new Error('Invalid email or password'))
     }
   } catch (err) {
-    res.status(500).json({ msg: 'Error in login user: ' + err })
+    next(new Error('Error in login user'))
   }
 }
 

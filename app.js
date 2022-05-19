@@ -10,7 +10,10 @@ const morgan = require('morgan')
 const PORT = process.env.PORT || 4000
 const { dbConnect } = require('./config/mongo')
 const router = require('./app/Routes')
-
+const {
+  middlewareError,
+  handleError,
+} = require('./app/Error/middleware/Errors')
 //* MIDDLEWARE
 app.use(cors())
 app.use(express.json())
@@ -21,6 +24,8 @@ app.use(express.urlencoded({ limit: '50bm', extended: true }))
 
 //* ROUTES
 app.use('/api', router)
+app.use(middlewareError)
+app.use(handleError)
 
 //* CONNECTION
 dbConnect()
