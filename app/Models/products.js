@@ -3,6 +3,7 @@ const { Schema, model, default: mongoose } = require('mongoose')
 const productSchema = new Schema({
   name: {
     type: String,
+    trim: true,
     required: [true, 'name is required'],
   },
   brand: {
@@ -62,6 +63,7 @@ const productSchema = new Schema({
   other: {
     type: String,
   },
+  business: { type: mongoose.Schema.ObjectId, ref: 'Business' },
 })
 
 module.exports = model('Products', productSchema)

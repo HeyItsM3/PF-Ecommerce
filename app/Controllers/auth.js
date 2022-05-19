@@ -52,12 +52,12 @@ const loginUser = async (req, res) => {
     })
     // Check if the password is right
     if (user && (await compare(password, user.password))) {
-      console.log(user)
       const { password, ...rest } = user._doc
       const token = createToken(user)
-      res.status(200).json({
+      res.status(200).header('Authorization', token).json({
         rest,
         token,
+        msg: 'User Logged in successfully',
       })
     } else {
       res.status(401).send({ msg: 'Invalid email or password' })

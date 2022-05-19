@@ -1,0 +1,50 @@
+################################ LOCAL ################################
+
+#### IMPORTANTE ####
+## Solo se puede enviar una petición (Ej: get all users y el resto de las peticiones post, put, etc deben estar comentadas
+## Y se debe dejar un espacio entre Content-Type: application/json y el body {} que vas a enviar
+
+@host = http://localhost:4000
+
+# GET_ALL_USERS
+# Tenes que setear un header "Authorization" con el token de un usuario admin 
+# GET {{host}}/api/users
+# Authorization:eyJhbG....
+
+# REGISTER_USER
+
+# POST {{host}}/api/users/register
+# Content-Type: application/json
+
+# {
+#     "name": "",
+#     "email": "@ecommerce.com",
+#     "phoneNumber": "+54",
+#     "password": "12",
+#     "role": "" 
+# }
+
+# LOGIN_USER
+# POST {{host}}/api/users/login
+# Content-Type: application/json
+
+# {
+#     "email": "aldo@ecommerce.com",
+#     "password": "123456Aa@"
+# }
+
+
+# UPDATE_USER
+## Para el update necesitas el id del usuario que queres actualizar
+# PUT {{host}}/api/users/update/:id
+# Authorization: eyJhbGciOiJIU
+# Content-Type: application/json
+
+# {
+#   "name": "aldo"
+# }
+
+
+
+
+################################ PRODUCCIÓN ################################

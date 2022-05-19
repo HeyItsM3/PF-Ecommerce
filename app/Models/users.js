@@ -3,6 +3,7 @@ const { Schema, model } = require('mongoose')
 const userSchema = new Schema({
   name: {
     type: String,
+    trim: true,
     required: [true, 'name is required'],
   },
   email: {
@@ -28,6 +29,8 @@ const userSchema = new Schema({
     required: false,
     default: false,
   },
+  stripeSeller: {},
+  stripeCustomer: {},
 })
 
 module.exports = model('Users', userSchema)

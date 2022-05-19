@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 const express = require('express')
+const helmet = require('helmet')
 const cors = require('cors')
 const app = express()
 const morgan = require('morgan')
@@ -15,12 +16,11 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
+app.use(helmet())
 app.use(express.urlencoded({ limit: '50bm', extended: true }))
 
 //* ROUTES
 app.use('/api', router)
-
-//* MULTER
 
 //* CONNECTION
 dbConnect()

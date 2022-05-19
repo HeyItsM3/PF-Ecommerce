@@ -35,4 +35,18 @@ const isSeller = (req, res, next) => {
   })
 }
 
-module.exports = { isAuth, isAdmin, isSeller }
+const isOwner = (req, res, next) => {
+  const { owner } = req.business
+  isAuth(req, res, () => {
+    const { user } = req.data
+    const isOwner = owner.id === user._id
+    if (!isOwner) {
+      return res.status(403).json({
+        error: 'User is not authorized',
+      })
+    }
+    next()
+  })
+}
+
+module.exports = { isAuth, isAdmin, isSeller, isOwner }

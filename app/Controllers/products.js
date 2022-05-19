@@ -107,7 +107,9 @@ const postProduct = async (req, res) => {
           message: 'Successful request',
           product,
         })
-      : res.status(404).json({ message: 'Error' })
+      : res
+          .status(404)
+          .json({ message: 'Error product not found or is not valid' })
   } catch (err) {
     res
       .status(500)
