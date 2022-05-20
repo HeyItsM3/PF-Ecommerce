@@ -13,7 +13,7 @@ const router = require('./app/Routes')
 const {
   middlewareError,
   handleError,
-} = require('./app/Error/middleware/Errors')
+} = require('./app/middleware/Error/Errors')
 //* MIDDLEWARE
 app.use(cors())
 app.use(express.json())

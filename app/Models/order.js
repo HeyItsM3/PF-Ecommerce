@@ -1,6 +1,6 @@
 const { Schema, model, default: mongoose } = require('mongoose')
 
-const OrderSchema = new Schema(
+const orderSchema = new Schema(
   {
     products: {
       type: Schema.Types.ObjectId,
@@ -31,4 +31,4 @@ const OrderSchema = new Schema(
   }
 )
 
-module.exports = model('Order', OrderSchema)
+module.exports = model('Order', orderSchema)

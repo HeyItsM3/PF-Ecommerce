@@ -40,7 +40,18 @@ const updateUser = async (req, res, next) => {
   }
 }
 
+const getUserId = (req, res, next, id) => {
+  UserModel.findById(id).exec((err, user) => {
+    if (!user || err) {
+      return res.status(400).json({ msg: 'Error trying to find user' })
+    }
+    req.data = user
+    next()
+  })
+}
+
 module.exports = {
   getAllUsers,
   updateUser,
+  getUserId,
 }

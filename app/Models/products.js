@@ -54,7 +54,6 @@ const productSchema = new Schema(
         'other',
         'technology',
       ],
-
       required: [true, 'category is required'],
     },
     image: {

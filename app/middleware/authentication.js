@@ -42,7 +42,7 @@ const isOwner = (req, res, next) => {
     const isOwner = owner.id === user._id
     if (!isOwner) {
       return res.status(403).json({
-        error: 'User is not authorized',
+        error: 'You must be the owner of this business to do that',
       })
     }
     next()
