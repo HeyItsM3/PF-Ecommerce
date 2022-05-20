@@ -1,67 +1,102 @@
 const { Schema, model, default: mongoose } = require('mongoose')
 
-const productSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'name is required'],
+const reviewSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String, required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, 'User is required'],
+      ref: 'Users',
+    },
   },
-  brand: {
-    type: String,
-    required: [true, 'brand is required'],
+  {
+    timestamps: true,
+  }
+)
+
+const productSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'name is required'],
+    },
+    brand: {
+      type: String,
+      required: [true, 'brand is required'],
+    },
+    description: {
+      type: String,
+      required: [true, 'description is required'],
+    },
+    price: {
+      type: Number,
+      required: [true, 'price is required'],
+    },
+    amount: {
+      type: Number,
+      required: [true, 'amount is required'],
+    },
+    condition: {
+      type: String,
+      enum: ['new', 'used'],
+      required: [true, 'condition is required'],
+    },
+    model: {
+      type: String,
+      required: [true, 'model is required'],
+    },
+    offer: {
+      type: Boolean,
+      default: false,
+    },
+    dimensions: {
+      type: mongoose.Types.Decimal128,
+    },
+    rating: {
+      type: Number,
+      required: [true, 'rating is required'],
+      default: 0,
+    },
+    amountReviews: {
+      type: Number,
+      required: [true, 'amount is required'],
+      default: 0,
+    },
+    category: {
+      type: String,
+      enum: [
+        'art',
+        'Bookstore and haberdashery',
+        'cards',
+        'motorcycle and others',
+        'beauty and personal care',
+        'sports and fitness',
+        'home appliances',
+        'home furniture and garden',
+        'fashion',
+        'kids',
+        'other',
+        'technology',
+      ],
+      required: [true, 'category is required'],
+    },
+    image: {
+      type: String,
+      required: [true, 'image is required'],
+    },
+    other: {
+      type: String,
+    },
+    reviews: [reviewSchema],
   },
-  description: {
-    type: String,
-    required: [true, 'description is required'],
+  {
+    versionKey: false,
   },
-  price: {
-    type: Number,
-    required: [true, 'price is required'],
-  },
-  amount: {
-    type: Number,
-    required: [true, 'amount is required'],
-  },
-  condition: {
-    type: String,
-    enum: ['new', 'used'],
-    required: [true, 'condition is required'],
-  },
-  model: {
-    type: String,
-    required: [true, 'model is required'],
-  },
-  offer: {
-    type: Boolean,
-    default: false,
-  },
-  dimensions: {
-    type: mongoose.Types.Decimal128,
-  },
-  category: {
-    type: String,
-    enum: [
-      'art',
-      'Bookstore and haberdashery',
-      'cards',
-      'motorcycle and others',
-      'beauty and personal care',
-      'sports and fitness',
-      'home appliances',
-      'home furniture and garden',
-      'fashion',
-      'kids',
-      'other',
-      'technology',
-    ],
-    required: [true, 'category is required'],
-  },
-  image: {
-    type: String,
-    required: [true, 'image is required'],
-  },
-  other: {
-    type: String,
-  },
-})
+  {
+    timestamps: true,
+  }
+)
 
 module.exports = model('Products', productSchema)
