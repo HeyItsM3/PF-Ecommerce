@@ -1,12 +1,19 @@
 const { Router } = require('express')
-const { getAllUsers, updateUser } = require('../Controllers/users')
+const {
+  getAllUsers,
+  updateUserByAdmin,
+  updateUserProfile,
+  getUserById,
+} = require('../Controllers/users')
 const { registerUser, loginUser } = require('../Controllers/auth')
 const { isAuth, isAdmin } = require('../middleware/authentication.js')
 const router = Router()
 
 router.get('/', isAdmin, getAllUsers)
+router.get('/:id', isAuth, getUserById)
 router.post('/login', loginUser)
 router.post('/register', registerUser)
-router.put('/update/:id', isAuth, updateUser)
+router.put('/profile/', isAuth, updateUserProfile)
+router.put('/update/:id', isAuth, isAdmin, updateUserByAdmin)
 
 module.exports = router

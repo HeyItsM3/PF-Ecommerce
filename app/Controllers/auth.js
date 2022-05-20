@@ -1,7 +1,5 @@
 const UserModel = require('../Models/users')
-const { hashSync, compare } = require('bcrypt')
-// const nodemailer = require ('nodemailer')
-const { sendRegisterEmail } = require ('../nodemailer/nodemailer')
+const { hashSync, compare, genSalt } = require('bcrypt')
 const { createToken } = require('../utils/utils')
 
 // REGISTER USER
@@ -11,6 +9,7 @@ const registerUser = async (req, res, next) => {
   // Verify if the email already exists
   const verifyUser = await UserModel.findOne({ email })
   verifyUser && next(new Error('The email already exists.'))
+  const salt = await genSalt(10) // salts for password
 
   // Check all the fields before create
   if (name && email && password) {
@@ -19,7 +18,7 @@ const registerUser = async (req, res, next) => {
       phoneNumber,
       email,
       role,
-      password: hashSync(password, 10),
+      password: hashSync(password, salt),
     })
     try {
       const user = await newUser.save()
@@ -31,9 +30,6 @@ const registerUser = async (req, res, next) => {
         role: user.role,
         token: createToken(user),
       })
-      sendRegisterEmail(
-        user.name,
-        user.email);
     } catch (error) {
       next(new Error('Error trying to create a new user'))
     }
@@ -53,10 +49,10 @@ const loginUser = async (req, res, next) => {
     })
     // Check if the password is right
     if (user && (await compare(password, user.password))) {
-      console.log(user)
       const { password, ...rest } = user._doc
       const token = createToken(user)
-      res.status(200).json({
+      res.status(200).header('Authorization', token).json({
+        msg: 'User Logged in successfully',
         rest,
         token,
       })
