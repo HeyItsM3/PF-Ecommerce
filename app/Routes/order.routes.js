@@ -1,10 +1,20 @@
 const { Router } = require('express')
-const { isAuth } = require('../middleware/authentication')
-const createOrder = require('../Controllers/order')
-const { getUserId } = require('../Controllers/users')
+const { isAuth, isAdmin } = require('../middleware/authentication')
+const {
+  postOrder,
+  getOrders,
+  getUserOrders,
+  getOrderById,
+  setOrderDelivery,
+  deleteOrder,
+} = require('../Controllers/order')
 const router = Router()
 
-router.post('/create/:userId', isAuth, createOrder)
+router.get('/', isAuth, isAdmin, getOrders)
+router.get('/user', isAuth, getUserOrders)
+router.get('/:id', isAuth, getOrderById)
+router.put('/:id/delivery', isAuth, setOrderDelivery)
+router.post('/create', isAuth, postOrder)
+router.delete('/delete/:id', isAuth, deleteOrder)
 
-router.param('userId', getUserId)
 module.exports = router

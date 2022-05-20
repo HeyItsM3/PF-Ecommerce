@@ -16,7 +16,7 @@ const isAuth = (req, res, next) => {
 const isAdmin = (req, res, next) => {
   isAuth(req, res, () => {
     const { user } = req.data
-    if (user && user.role === 'admin') {
+    if (user && user.isAdmin === true) {
       return next()
     } else {
       res.status(400).json({ msg: 'You must be an admin' })
@@ -27,7 +27,7 @@ const isAdmin = (req, res, next) => {
 const isSeller = (req, res, next) => {
   isAuth(req, res, () => {
     const { user } = req.data
-    if ((user && user.role === 'seller') || user.role === 'admin') {
+    if ((user && user.role === 'seller') || user.isAdmin === true) {
       return next()
     } else {
       res.status(400).json({ msg: 'You must be a seller to do that' })
@@ -35,18 +35,4 @@ const isSeller = (req, res, next) => {
   })
 }
 
-const isOwner = (req, res, next) => {
-  const { owner } = req.business
-  isAuth(req, res, () => {
-    const { user } = req.data
-    const isOwner = owner.id === user._id
-    if (!isOwner) {
-      return res.status(403).json({
-        error: 'You must be the owner of this business to do that',
-      })
-    }
-    next()
-  })
-}
-
-module.exports = { isAuth, isAdmin, isSeller, isOwner }
+module.exports = { isAuth, isAdmin, isSeller }

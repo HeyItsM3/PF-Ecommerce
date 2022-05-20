@@ -17,5 +17,4 @@ router.post('/post', isSeller, configMulter, validateCreateProduct, postProduct)
 router.delete('/delete/:id', isSeller, deleteProduct)
 router.put('/update/:id', isSeller, upDateProduct)
 
-// || user.role === 'admin'
 module.exports = router
