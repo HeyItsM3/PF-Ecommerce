@@ -6,7 +6,7 @@ const ProductModel = require('../Models/products')
 const getAllProducts = async (req, res, next) => {
   const {
     query: { name, filter, order },
-  } = req.query
+  } = req
   try {
     if (name) {
       const regex = new RegExp(name, 'i')

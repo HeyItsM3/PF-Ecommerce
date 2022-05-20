@@ -1,5 +1,21 @@
 const { Schema, model, default: mongoose } = require('mongoose')
 
+const reviewSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String, required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, 'User is required'],
+      ref: 'Users',
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
+
 const productSchema = new Schema(
   {
     name: {
@@ -38,6 +54,16 @@ const productSchema = new Schema(
     dimensions: {
       type: mongoose.Types.Decimal128,
     },
+    rating: {
+      type: Number,
+      required: [true, 'rating is required'],
+      default: 0,
+    },
+    amountReviews: {
+      type: Number,
+      required: [true, 'amount is required'],
+      default: 0,
+    },
     category: {
       type: String,
       enum: [
@@ -54,7 +80,6 @@ const productSchema = new Schema(
         'other',
         'technology',
       ],
-
       required: [true, 'category is required'],
     },
     image: {
@@ -64,9 +89,13 @@ const productSchema = new Schema(
     other: {
       type: String,
     },
+    reviews: [reviewSchema],
   },
   {
     versionKey: false,
+  },
+  {
+    timestamps: true,
   }
 )
 

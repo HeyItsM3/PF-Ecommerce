@@ -2,6 +2,7 @@ require('dotenv').config()
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
 const jwt = require('jsonwebtoken')
+const multer = require('multer')
 
 // CLOUDINARY CONFIGURATION
 
@@ -36,4 +37,43 @@ const createToken = (user) =>
     { expiresIn: '5d' }
   )
 
-module.exports = { cloudinary, streamUpload, createToken }
+// MULTER CONFIGURATION
+
+const storage = multer.memoryStorage()
+const maxSize = 2 * 1024 * 1024
+const configMulter = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/jpg' ||
+      file.mimetype === 'image/jpeg'
+    ) {
+      cb(null, true)
+    } else {
+      cb(null, false)
+      return cb(
+        new Error({
+          message: 'Only .png, .jpg and .jpeg format allowed!',
+          error: true,
+        })
+      )
+    }
+  },
+  limits: { fileSize: maxSize },
+}).single('image')
+// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
+// // En este caso ingresa por el input de tipo image
+
+// CONSTANTES
+
+const defaultImg =
+  'https://res.cloudinary.com/pf-ecommerce/image/upload/v1652945191/Default%20PF/blank-profile-picture-973460_960_720_qp13gh.png'
+
+module.exports = {
+  cloudinary,
+  streamUpload,
+  createToken,
+  configMulter,
+  defaultImg,
+}
