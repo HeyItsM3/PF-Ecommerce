@@ -25,18 +25,15 @@ const streamUpload = (req) => {
 }
 
 // JWT CONFIGURATION
+//  id: user._id => Mongo guarda en _doc nuestros documentos
 
-const access = (user) =>
+const createToken = (user) =>
   jwt.sign(
     {
-      id: user._id, // Mongo guarda en _doc nuestros documentos
-      name: user.name,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      isAdmin: user.isAdmin,
+      user,
     },
     process.env.JWT_SEC_KEY,
     { expiresIn: '5d' }
   )
 
-module.exports = { cloudinary, streamUpload, access }
+module.exports = { cloudinary, streamUpload, createToken }

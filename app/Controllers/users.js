@@ -2,40 +2,41 @@ const UserModel = require('../Models/users')
 
 // GET ALL USERS
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
   try {
     const user = await UserModel.find()
-    res.status(200).json({ message: 'Successful request', user })
+    user
+      ? res.status(200).json({ message: 'Request exitosa', user })
+      : next(new Error('Error Apparently there are no users '))
   } catch (err) {
-    console.log(err)
+    next(new Error('Error trying to get users'))
   }
 }
 
 // UPDATE USER
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   const {
     params: { id },
-    body: { name, email, phoneNumber, isSeller, isAdmin, isDeleted },
+    body: { name, email, phoneNumber, isDeleted, role },
   } = req
   try {
     const user = await UserModel.findById(id)
     if (user) {
       user.name = name || user.name
-      user.email = email || user.name
-      user.phoneNumber = phoneNumber || user.name
-      user.isSeller = isSeller || user.name
-      user.isAdmin = isAdmin || user.name
-      user.isDeleted = isDeleted || user.name
+      user.email = email || user.email
+      user.phoneNumber = phoneNumber || user.phoneNumber
+      user.role = role || user.role
+      user.isDeleted = isDeleted
 
       const changeUser = await user.save()
       const { password, ...rest } = changeUser._doc
       res.status(200).send({ msg: 'Your user has been updated', rest })
     } else {
-      res.status(404).send({ msg: 'We cant find the user' })
+      next(new Error('We cant find the user'))
     }
   } catch (err) {
-    res.status(500).json({ msg: 'Error in disableUser: ' + err })
+    next(new Error('Error in disableUser'))
   }
 }
 
