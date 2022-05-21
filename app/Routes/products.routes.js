@@ -13,8 +13,8 @@ const router = Router()
 
 router.get('/', getAllProducts)
 router.get('/detail/:id', getProductDetail)
-router.post('/post', isSeller, configMulter, validateCreateProduct, postProduct)
-router.delete('/delete/:id', isSeller, deleteProduct)
-router.put('/update/:id', isSeller, upDateProduct)
+router.post('/post', isSeller, configMulter, validateCreateProduct, postProduct) // add isSeller
+router.delete('/delete/:id', isSeller, deleteProduct) // add isSeller
+router.put('/update/:id', isSeller, upDateProduct) // add isSeller
 
 module.exports = router

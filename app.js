@@ -15,12 +15,17 @@ const {
   handleError,
 } = require('./app/middleware/Error/Errors')
 //* MIDDLEWARE
-app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(express.urlencoded({ limit: '50bm', extended: true }))
+app.use(
+  cors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  })
+)
 
 //* ROUTES
 app.use('/api', router)
