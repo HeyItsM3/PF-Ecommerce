@@ -63,8 +63,6 @@ const configMulter = multer({
   },
   limits: { fileSize: maxSize },
 }).array('image', 4)
-// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
-// // En este caso ingresa por el input de tipo image
 
 // CONSTANTES
 
