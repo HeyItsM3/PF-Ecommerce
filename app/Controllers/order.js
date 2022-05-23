@@ -2,10 +2,14 @@ const OrderModel = require('../Models/order')
 // const UserModel = require('../Models/users')
 // const ProductModel = require('../Models/products')
 
-const getOrders = async (req, res) => {
+// GET ORDERS
+
+const getAllOrders = async (req, res) => {
   const orders = await OrderModel.find().populate('user', 'name')
   res.status(200).json(orders)
 }
+
+// POST A NEW ORDER
 
 const postOrder = async (req, res) => {
   const {
@@ -34,7 +38,9 @@ const postOrder = async (req, res) => {
   }
 }
 
-const getOrderById = async (req, res) => {
+// GET ORDER DETAIL (BY ORDER ID)
+
+const getOrderDetail = async (req, res) => {
   const order = await OrderModel.findById(req.params.id)
   if (order) {
     res.status(200).json(order)
@@ -42,6 +48,8 @@ const getOrderById = async (req, res) => {
     res.status(404).json({ message: 'Order Not Found' })
   }
 }
+
+// SET DELIVERY ORDER
 
 const setOrderDelivery = async (req, res) => {
   const order = await OrderModel.findById(req.params.id)
@@ -55,6 +63,8 @@ const setOrderDelivery = async (req, res) => {
   }
 }
 
+// DELETE ORDER
+
 const deleteOrder = async (req, res) => {
   const order = await OrderModel.findById(req.params.id)
   if (order) {
@@ -65,16 +75,42 @@ const deleteOrder = async (req, res) => {
   }
 }
 
+// GET ORDERS BY USER ID
+
 const getUserOrders = async (req, res) => {
   const userOrder = await OrderModel.find({ user: req.data.user._id })
   res.status(200).json(userOrder)
 }
 
+// PAY ORDER
+
+const setPaymentOrder = async (req, res) => {
+  const order = await OrderModel.findById(req.params.id)
+
+  if (order) {
+    order.paidAt = Date.now()
+    order.isPaid = true
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_address: req.body.email_address,
+    }
+
+    const paidOrder = await order.save()
+
+    return res.status(200).json(paidOrder)
+  } else {
+    return res.status(404).json({ message: 'Order Not Found' })
+  }
+}
+
 module.exports = {
-  getOrders,
+  getAllOrders,
   postOrder,
   getUserOrders,
-  getOrderById,
+  getOrderDetail,
   setOrderDelivery,
+  setPaymentOrder,
   deleteOrder,
 }

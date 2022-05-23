@@ -12,9 +12,7 @@ const validateCreateProduct = [
   check('dimensions').exists().notEmpty(),
   check('category').isString().exists().notEmpty(),
   check('other').isString().exists().notEmpty(),
-
   (req, res, next) => validateResults(req, res, next),
 ]
 
 module.exports = { validateCreateProduct }
-// .custom((file, { req }) => file === req.body.file)

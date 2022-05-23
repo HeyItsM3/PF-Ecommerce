@@ -81,10 +81,18 @@ const postProduct = async (req, res, next) => {
   } = req
 
   try {
-    if (!req.file) {
-      return res.status(400).json({ msg: 'You have to upload an image' })
+    // if (!req.files) {
+    //   return res.status(400).json({ msg: 'You have to upload an image' })
+    // }
+    // const { url } = await streamUpload(req.files)
+  
+    const urls = []
+    const files = req.files
+    for (const file of files) {
+      const { buffer } = file
+      const newPath = await streamUpload(buffer)
+      urls.push(newPath)
     }
-    const { url } = await streamUpload(req)
 
     const newProduct = {
       name,
@@ -98,7 +106,7 @@ const postProduct = async (req, res, next) => {
       offer,
       dimensions,
       other,
-      image: url,
+      image: urls
     }
 
     const product = await ProductModel.create(newProduct)
@@ -107,13 +115,9 @@ const postProduct = async (req, res, next) => {
           message: 'Successful request',
           product,
         })
-      : next(
-          new Error(
-            'The product variable is empty, check for an error in the load.'
-          )
-        )
+      : res.status(400)
   } catch (err) {
-    next(new Error('Did not work product creation'))
+    res.status(400).json({ message: err.message })
   }
 }
 

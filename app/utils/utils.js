@@ -16,12 +16,13 @@ const streamUpload = (req) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream((error, result) => {
       if (result) {
-        resolve(result)
+        resolve(result.url)
       } else {
         reject(error)
       }
     })
-    streamifier.createReadStream(req.files.buffer).pipe(stream)
+    // const data = req.files.map((x) => x.buffer)
+    streamifier.createReadStream(req).pipe(stream)
   })
 }
 
@@ -40,14 +41,14 @@ const createToken = (user) =>
 // MULTER CONFIGURATION
 
 const storage = multer.memoryStorage()
-const maxSize = 2 * 1024 * 1024
+const maxSize = 50 * 1024 * 1024
 const configMulter = multer({
   storage,
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req, files, cb) => {
     if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg'
+      files.mimetype === 'image/png' ||
+      files.mimetype === 'image/jpg' ||
+      files.mimetype === 'image/jpeg'
     ) {
       cb(null, true)
     } else {
@@ -61,7 +62,7 @@ const configMulter = multer({
     }
   },
   limits: { fileSize: maxSize },
-}).single('image')
+}).array('image', 4)
 // // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
 // // En este caso ingresa por el input de tipo image
 
