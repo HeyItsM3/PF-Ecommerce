@@ -1,27 +1,20 @@
 const nodemailer = require ('nodemailer');
 // const UserModel = require('../Models/users')
+const sendgridTransport = require ('nodemailer-sendgrid-transport');
+require('dotenv').config();
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email', // en donde voy a enviar el correo
-    port: 587,
-    secure: false,
-    auth: {
-        user: 'sydni.boyle8@ethereal.email', // adonde lo va a enviar
-        pass: 'zPhzEKZvtnAsvEn5et'
-    }
-});
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth: process.env.API_KEY_SENDGRID
+}));
 
-module.exports.sendRegisterEmail = (name, email) => {
-    console.log("Check");
-    transporter.sendMail({
-      from: 'user',
-      to: email,
-      subject: "Registration completed successfully!",
-      html: `<h1>Email Confirmation</h1>
-          <h2>Hello ${name}</h2>
-          <p>Welcome to blablabla</p>
-          </div>`,
-    }).catch(err => console.log(err));
-  };
+const sendRegisterEmail = (name, email) => {
+  transporter.sendMail({
+    to: email,
+    from: 'ecommerce.grupo07@gmail.com',
+    subject: "Registration completed successfully!",
+    html: `<h1>Email Confirmation</h1>
+    <h2>Hello ${name}</h2>
+    <p>Welcome to blablabla</p>`,
+})}
 
-// module.exports = { transporter }
+module.exports = { sendRegisterEmail }
