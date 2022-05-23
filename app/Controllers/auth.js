@@ -1,6 +1,6 @@
 const UserModel = require('../Models/users')
 const { hashSync, compare, genSalt } = require('bcrypt')
-const { createToken } = require('../utils/utils')
+const { createToken, sendRegisterEmail } = require('../utils/utils')
 
 // REGISTER USER
 
@@ -22,6 +22,7 @@ const registerUser = async (req, res, next) => {
     })
     try {
       const user = await newUser.save()
+      sendRegisterEmail(user.name, user.email)
       res.status(200).json({
         _id: user._id,
         name: user.name,

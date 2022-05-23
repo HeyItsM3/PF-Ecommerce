@@ -83,7 +83,7 @@ const productSchema = new Schema(
       required: [true, 'category is required'],
     },
     image: {
-      type: String,
+      type: [String],
       required: [true, 'image is required'],
     },
     other: {

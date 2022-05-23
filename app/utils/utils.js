@@ -1,4 +1,6 @@
 require('dotenv').config()
+const nodemailer = require('nodemailer')
+const sendgridTransport = require('nodemailer-sendgrid-transport')
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
 const jwt = require('jsonwebtoken')
@@ -21,7 +23,7 @@ const streamUpload = (req) => {
         reject(error)
       }
     })
-    streamifier.createReadStream(req.file.buffer).pipe(stream)
+    streamifier.createReadStream(req.files.buffer).pipe(stream)
   })
 }
 
@@ -43,11 +45,11 @@ const storage = multer.memoryStorage()
 const maxSize = 2 * 1024 * 1024
 const configMulter = multer({
   storage,
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req, files, cb) => {
     if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg'
+      files.mimetype === 'image/png' ||
+      files.mimetype === 'image/jpg' ||
+      files.mimetype === 'image/jpeg'
     ) {
       cb(null, true)
     } else {
@@ -61,19 +63,33 @@ const configMulter = multer({
     }
   },
   limits: { fileSize: maxSize },
-}).single('image')
-// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
-// // En este caso ingresa por el input de tipo image
+}).array('image', 4)
 
-// CONSTANTES
+// require('dotenv').config();
 
-const defaultImg =
-  'https://res.cloudinary.com/pf-ecommerce/image/upload/v1652945191/Default%20PF/blank-profile-picture-973460_960_720_qp13gh.png'
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.API_KEY_SENDGRID,
+    },
+  })
+)
+
+const sendRegisterEmail = (name, email) => {
+  transporter.sendMail({
+    to: email,
+    from: 'ecommerce.grupo07@gmail.com',
+    subject: 'Registration completed successfully!',
+    html: `<h1>Email Confirmation</h1>
+    <h2>Hello ${name}</h2>
+    <p>Your registration has been successfully completed</p>`,
+  })
+}
 
 module.exports = {
+  sendRegisterEmail,
   cloudinary,
   streamUpload,
   createToken,
   configMulter,
-  defaultImg,
 }
