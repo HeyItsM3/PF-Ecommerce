@@ -20,7 +20,7 @@ const postOrder = async (req, res) => {
     shippingCost,
     totalCost,
   } = req.body
-  if (orderProducts.length === 0) {
+  if (orderProducts && orderProducts.length === 0) {
     return res.status(400).json({ msg: 'You need to add orderProducts' })
   } else {
     const order = new OrderModel({
