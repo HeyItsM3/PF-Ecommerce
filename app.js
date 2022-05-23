@@ -26,6 +26,9 @@ app.use(
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 )
+app.get('/api/config/paypal', (req, res) => {
+  res.json(process.env.PAYPAL_CLIENT_ID)
+})
 
 //* ROUTES
 app.use('/api', router)
