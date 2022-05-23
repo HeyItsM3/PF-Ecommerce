@@ -85,7 +85,7 @@ const postProduct = async (req, res, next) => {
     //   return res.status(400).json({ msg: 'You have to upload an image' })
     // }
     // const { url } = await streamUpload(req.files)
-
+  
     const urls = []
     const files = req.files
     for (const file of files) {
@@ -106,7 +106,7 @@ const postProduct = async (req, res, next) => {
       offer,
       dimensions,
       other,
-      image: urls.map((url) => url.res),
+      image: urls
     }
 
     const product = await ProductModel.create(newProduct)
