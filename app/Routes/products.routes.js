@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { validateCreateProduct } = require('../validators/products')
-const { isSeller } = require('../middleware/authentication')
+// const { isSeller } = require('../middleware/authentication')
 const { configMulter } = require('../utils/utils')
 const {
   getAllProducts,
