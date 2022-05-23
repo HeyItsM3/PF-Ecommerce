@@ -21,8 +21,7 @@ const streamUpload = (req) => {
         reject(error)
       }
     })
-    // const data = req.files.map((x) => x.buffer)
-    streamifier.createReadStream(req).pipe(stream)
+    streamifier.createReadStream(req.files.buffer).pipe(stream)
   })
 }
 
