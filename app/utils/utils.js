@@ -1,4 +1,6 @@
 require('dotenv').config()
+const nodemailer = require('nodemailer')
+const sendgridTransport = require('nodemailer-sendgrid-transport')
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
 const jwt = require('jsonwebtoken')
@@ -63,18 +65,32 @@ const configMulter = multer({
   },
   limits: { fileSize: maxSize },
 }).array('image', 4)
-// // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
-// // En este caso ingresa por el input de tipo image
 
-// CONSTANTES
+// require('dotenv').config();
 
-const defaultImg =
-  'https://res.cloudinary.com/pf-ecommerce/image/upload/v1652945191/Default%20PF/blank-profile-picture-973460_960_720_qp13gh.png'
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.API_KEY_SENDGRID,
+    },
+  })
+)
+
+const sendRegisterEmail = (name, email) => {
+  transporter.sendMail({
+    to: email,
+    from: 'ecommerce.grupo07@gmail.com',
+    subject: 'Registration completed successfully!',
+    html: `<h1>Email Confirmation</h1>
+    <h2>Hello ${name}</h2>
+    <p>Your registration has been successfully completed</p>`,
+  })
+}
 
 module.exports = {
+  sendRegisterEmail,
   cloudinary,
   streamUpload,
   createToken,
   configMulter,
-  defaultImg,
 }
