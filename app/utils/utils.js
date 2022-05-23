@@ -43,11 +43,11 @@ const storage = multer.memoryStorage()
 const maxSize = 2 * 1024 * 1024
 const configMulter = multer({
   storage,
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req, files, cb) => {
     if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg'
+      files.mimetype === 'image/png' ||
+      files.mimetype === 'image/jpg' ||
+      files.mimetype === 'image/jpeg'
     ) {
       cb(null, true)
     } else {
@@ -61,7 +61,7 @@ const configMulter = multer({
     }
   },
   limits: { fileSize: maxSize },
-}).single('image')
+}).array('image', 4)
 // // Single examina el campo (form, etc) por donde ingresa la imagen pueder ser array para multiples img
 // // En este caso ingresa por el input de tipo image
 
