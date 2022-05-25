@@ -16,9 +16,9 @@ const postOrder = async (req, res) => {
     orderProducts,
     deliveryAddress,
     paymentMethod,
-    productsCost,
-    shippingCost,
-    totalCost,
+    itemsPrice,
+    shippingPrice,
+    totalPrice,
   } = req.body
   if (orderProducts && orderProducts.length === 0) {
     return res.status(400).json({ msg: 'You need to add orderProducts' })
@@ -27,10 +27,10 @@ const postOrder = async (req, res) => {
       orderProducts,
       deliveryAddress,
       paymentMethod,
-      productsCost,
-      shippingCost,
-      totalCost,
-      user: req.data.user._id,
+      itemsPrice,
+      shippingPrice,
+      totalPrice,
+      // user: req.data.user._id,
     })
     const newOrder = await order.save()
 
