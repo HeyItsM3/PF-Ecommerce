@@ -1,6 +1,7 @@
 const { findByIdAndUpdate } = require('../Models/products')
 const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
+const _ = require('lodash')
 
 // GET Products
 const getAllProducts = async (req, res, next) => {
@@ -9,7 +10,7 @@ const getAllProducts = async (req, res, next) => {
   } = req
   try {
     if (name) {
-      const regex = new RegExp(name, 'i')
+      const regex = new RegExp(_.escapeRegExp(name), 'i')
       const products = await ProductModel.find({ name: { $regex: regex } })
       products
         ? res.status(200).json({ message: `Successful request`, products })
@@ -21,7 +22,9 @@ const getAllProducts = async (req, res, next) => {
     }
     // filter by brand
     else if (filter) {
-      const products = await ProductModel.find({ brand: req.query.filter })
+      const products = await ProductModel.find({
+        brand: req.query.filter,
+      })
       return res.json(products)
     }
     // order by price
@@ -85,7 +88,7 @@ const postProduct = async (req, res, next) => {
     //   return res.status(400).json({ msg: 'You have to upload an image' })
     // }
     // const { url } = await streamUpload(req.files)
-  
+
     const urls = []
     const files = req.files
     for (const file of files) {
@@ -106,7 +109,7 @@ const postProduct = async (req, res, next) => {
       offer,
       dimensions,
       other,
-      image: urls
+      image: urls,
     }
 
     const product = await ProductModel.create(newProduct)
@@ -154,7 +157,11 @@ const upDateProduct = async (req, res, next) => {
     const productUpdate = {
       name,
     }
-    const product = await findByIdAndUpdate(id, productUpdate, { new: true })
+    const product = await findByIdAndUpdate(
+      id,
+      { productUpdate: { $eq: productUpdate } },
+      { new: true }
+    )
     product
       ? res
           .status(200)
