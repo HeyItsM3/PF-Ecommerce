@@ -1,4 +1,5 @@
 require('dotenv').config()
+const rateLimit = require('express-rate-limit')
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 const cloudinary = require('cloudinary').v2
@@ -66,6 +67,8 @@ const configMulter = multer({
   limits: { fileSize: maxSize },
 }).array('image', 4)
 
+// SEND EMAIL CONFIGURATION
+
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
@@ -85,7 +88,17 @@ const sendRegisterEmail = (name, email) => {
   })
 }
 
+// RATE-LIMITING CONFIGURATION
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
 module.exports = {
+  limiter,
   sendRegisterEmail,
   cloudinary,
   streamUpload,

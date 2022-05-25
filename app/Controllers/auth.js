@@ -7,7 +7,7 @@ const { createToken, sendRegisterEmail } = require('../utils/utils')
 const registerUser = async (req, res, next) => {
   const { name, password, email, phoneNumber, role } = req.body
   // Verify if the email already exists
-  const verifyUser = await UserModel.findOne({ email })
+  const verifyUser = await UserModel.findOne({ email: { $eq: email } })
   verifyUser && next(new Error('The email already exists.'))
   const salt = await genSalt(10) // salts for password
 
@@ -46,7 +46,7 @@ const loginUser = async (req, res, next) => {
   try {
     // Find user email
     const user = await UserModel.findOne({
-      email,
+      email: { $eq: email },
     })
     // Check if the password is right
     if (user && (await compare(password, user.password))) {
