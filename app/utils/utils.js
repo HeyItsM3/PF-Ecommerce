@@ -66,8 +66,6 @@ const configMulter = multer({
   limits: { fileSize: maxSize },
 }).array('image', 4)
 
-// require('dotenv').config();
-
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {

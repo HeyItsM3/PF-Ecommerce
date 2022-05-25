@@ -1,14 +1,14 @@
 const verifyBody = (name, email, password) => {
-  const erros = {}
+  const errors = {}
   if (!name) {
-    erros.name = 'name no existe'
+    errors.name = 'name no existe'
   } else if (!email) {
-    erros.email = 'email is requiered'
+    errors.email = 'email is requiered'
   } else if (!password) {
-    erros.password = 'password is requiered'
+    errors.password = 'password is requiered'
   }
 
-  return erros
+  return errors
 }
 
 module.exports = { verifyBody }

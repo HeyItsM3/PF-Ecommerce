@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { validateCreateProduct } = require('../validators/products')
-const { isSeller } = require('../middleware/authentication')
+// const { isSeller } = require('../middleware/authentication')
 const { configMulter } = require('../utils/utils')
 const {
   getAllProducts,
@@ -13,8 +13,8 @@ const router = Router()
 
 router.get('/', getAllProducts)
 router.get('/detail/:id', getProductDetail)
-router.post('/post', isSeller, configMulter, validateCreateProduct, postProduct) // add isSeller
-router.delete('/delete/:id', isSeller, deleteProduct) // add isSeller
-router.put('/update/:id', isSeller, upDateProduct) // add isSeller
+router.post('/post', configMulter, validateCreateProduct, postProduct) // add isSeller
+router.delete('/delete/:id', deleteProduct) // add isSeller
+router.put('/update/:id', upDateProduct) // add isSeller
 
 module.exports = router

@@ -13,28 +13,30 @@ const getAllOrders = async (req, res) => {
 
 const postOrder = async (req, res) => {
   const {
+    fullName,
     orderProducts,
     deliveryAddress,
     paymentMethod,
-    productsCost,
-    shippingCost,
-    totalCost,
+    itemsPrice,
+    shippingPrice,
+    totalPrice,
   } = req.body
-  if (orderProducts.length === 0) {
+  if (orderProducts && orderProducts.length === 0) {
     return res.status(400).json({ msg: 'You need to add orderProducts' })
   } else {
     const order = new OrderModel({
+      fullName,
       orderProducts,
       deliveryAddress,
       paymentMethod,
-      productsCost,
-      shippingCost,
-      totalCost,
-      user: req.data.user._id,
+      itemsPrice,
+      shippingPrice,
+      totalPrice,
+      user: req.user._id,
     })
     const newOrder = await order.save()
 
-    res.status(201).json({ msg: 'Order created successfully', newOrder })
+    res.status(201).json({ msg: 'Order created successfully', order: newOrder })
   }
 }
 

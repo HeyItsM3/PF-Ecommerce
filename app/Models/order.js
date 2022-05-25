@@ -11,8 +11,8 @@ const orderSchema = new Schema(
       {
         name: { type: String, required: [true, 'Name is required'] },
         quantity: { type: Number, required: [true, 'Quantity is required'] },
-        image: { type: String, required: [true, 'Image is required'] },
-        cost: { type: Number, required: [true, 'Cost is required'] },
+        image: { type: [String], required: [true, 'Image is required'] },
+        price: { type: Number, required: [true, 'Cost is required'] },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: [true, 'Products are required'],
@@ -21,6 +21,7 @@ const orderSchema = new Schema(
       },
     ],
     deliveryAddress: {
+      fullName: { type: String, required: [true, 'FullName is required'] },
       country: { type: String, required: [true, 'Country is required'] },
       province: { type: String, required: [true, 'Province is required'] },
       city: { type: String, required: [true, 'City is required'] },
@@ -52,15 +53,15 @@ const orderSchema = new Schema(
     deliveredAt: {
       type: Date,
     },
-    productsCost: {
+    itemsPrice: {
       type: Number,
       required: [true, 'Products cost is required'],
     },
-    shippingCost: {
+    shippingPrice: {
       type: Number,
       required: [true, 'Shipping cost is required'],
     },
-    totalCost: {
+    totalPrice: {
       type: Number,
       required: [true, 'Total cost is required'],
     },
