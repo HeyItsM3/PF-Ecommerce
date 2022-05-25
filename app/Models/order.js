@@ -2,11 +2,11 @@ const { Schema, model, default: mongoose } = require('mongoose')
 
 const orderSchema = new Schema(
   {
-    // user: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: [true, 'A user is required'],
-    //   ref: 'Users',
-    // },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, 'A user is required'],
+      ref: 'Users',
+    },
     orderProducts: [
       {
         name: { type: String, required: [true, 'Name is required'] },
@@ -21,6 +21,7 @@ const orderSchema = new Schema(
       },
     ],
     deliveryAddress: {
+      fullName: { type: String, required: [true, 'FullName is required'] },
       country: { type: String, required: [true, 'Country is required'] },
       province: { type: String, required: [true, 'Province is required'] },
       city: { type: String, required: [true, 'City is required'] },

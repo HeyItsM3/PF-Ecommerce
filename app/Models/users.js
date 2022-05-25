@@ -23,7 +23,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       default: 'visitant',
-      enum: ['visitant', 'seller', 'admin'],
+      enum: ['visitant', 'registered'],
     },
     isDeleted: {
       type: Boolean,
