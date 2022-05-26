@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { paymentStripe } = require('../Controllers/stripe')
+const paymentStripe = require('../Controllers/stripe')
 const { isAuth } = require('../middleware/authentication.js')
 const router = Router()
 
