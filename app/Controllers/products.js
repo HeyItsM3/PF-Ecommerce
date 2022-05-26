@@ -1,4 +1,3 @@
-const { findByIdAndUpdate } = require('../Models/products')
 const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 const _ = require('lodash')
@@ -38,16 +37,16 @@ const getAllProducts = async (req, res, next) => {
       return res.status(200).json({ message: 'Successful request', product })
     }
   } catch (err) {
-    next(new Error(`Failed to getAllProducts product controller`))
+    next(new Error(`Failed to getAllProducts product controller ` + err))
   }
 }
 
 // GET DETAIL
 
 const getProductDetail = async (req, res, next) => {
-  const {
-    params: { id },
-  } = req
+  if (!req.params.id) next(new Error('You need to provide an id'))
+
+  const { id } = req.params
   try {
     const product = await ProductModel.findById(id)
     product
@@ -60,7 +59,7 @@ const getProductDetail = async (req, res, next) => {
           )
         )
   } catch (err) {
-    next(new Error('Filed getProductDetail product controller'))
+    next(new Error('Filed getProductDetail product controller' + err))
   }
 }
 
@@ -84,10 +83,9 @@ const postProduct = async (req, res, next) => {
   } = req
 
   try {
-    // if (!req.files) {
-    //   return res.status(400).json({ msg: 'You have to upload an image' })
-    // }
-    // const { url } = await streamUpload(req.files)
+    if (!req.files) {
+      return res.status(400).json({ msg: 'You have to upload an image' })
+    }
 
     const urls = []
     const files = req.files
@@ -127,52 +125,49 @@ const postProduct = async (req, res, next) => {
 // DELETE
 
 const deleteProduct = async (req, res, next) => {
-  const {
-    params: { id },
-  } = req
-  try {
-    const product = await ProductModel.findByIdAndDelete(id)
+  if (!req.params.id) next(new Error('You need to provide an id'))
 
-    product
-      ? res.status(200).json({
-          message: `Successful request, the product with the id:${id} was deleted`,
-        })
-      : next(
-          new Error(
-            `Error Request, the product with the id:${id} was not found `
-          )
-        )
+  const { id } = req.params
+  try {
+    const product = await ProductModel.findById(id)
+    if (product) {
+      product.isDeleted = true
+      await product.save()
+      res.status(200).json({
+        message: `Successful request, the product with the id:${id} was deleted`,
+      })
+    } else {
+      next(
+        new Error(`Error Request, the product with the id:${id} was not found `)
+      )
+    }
   } catch (err) {
-    next(new Error('Filed deleteProduct controller'))
+    next(new Error('Filed deleteProduct controller' + err))
   }
 }
 // UPDATE
 
 const upDateProduct = async (req, res, next) => {
-  const {
-    params: { id },
-    body: { name },
-  } = req
+  if (!req.params.id) next(new Error('You need to provide an id'))
+
+  const { id } = req.params
   try {
-    const productUpdate = {
-      name,
-    }
-    const product = await findByIdAndUpdate(
+    const product = await ProductModel.findByIdAndUpdate(
       id,
-      { productUpdate: { $eq: productUpdate } },
+      { $set: req.body },
       { new: true }
     )
     product
       ? res
           .status(200)
-          .json({ msg: `The user with id: ${id} was successfully updated` })
+          .json({ msg: `The product with id: ${id} was successfully updated` })
       : next(
           new Error(
             `Unable to update the product please check if the id is correct`
           )
         )
   } catch (err) {
-    next(new Error('Filed upDateProduct controller'))
+    next(new Error('Filed upDateProduct controller' + err))
   }
 }
 

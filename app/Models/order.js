@@ -29,6 +29,13 @@ const orderSchema = new Schema(
       type: String,
       default: 'pending',
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deliveredAt: {
+      type: Date,
+    },
   },
   {
     versionKey: false,

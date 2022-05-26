@@ -76,6 +76,10 @@ const productSchema = new Schema(
       type: Date,
       default: Date.now,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     versionKey: false,
