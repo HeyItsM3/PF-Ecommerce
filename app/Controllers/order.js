@@ -1,109 +1,137 @@
 const OrderModel = require('../Models/order')
-// const UserModel = require('../Models/users')
-// const ProductModel = require('../Models/products')
 
 // GET ORDERS
 
-const getAllOrders = async (req, res) => {
-  const orders = await OrderModel.find().populate('user', 'name')
-  res.status(200).json(orders)
+const getAllOrders = async (req, res, next) => {
+  try {
+    const orders = await OrderModel.find()
+    res.status(200).json({ msg: 'Succesfull request', orders })
+  } catch (err) {
+    next(new Error('Error in getAllOrders' + err))
+  }
 }
 
 // POST A NEW ORDER
 
-const postOrder = async (req, res) => {
-  const {
-    fullName,
-    orderProducts,
-    deliveryAddress,
-    paymentMethod,
-    itemsPrice,
-    shippingPrice,
-    totalPrice,
-  } = req.body
+const postOrder = async (req, res, next) => {
+  const { orderStatus, deliveryAddress, amount, orderProducts } = req.body
   if (orderProducts && orderProducts.length === 0) {
     return res.status(400).json({ msg: 'You need to add orderProducts' })
   } else {
-    const order = new OrderModel({
-      fullName,
-      orderProducts,
-      deliveryAddress,
-      paymentMethod,
-      itemsPrice,
-      shippingPrice,
-      totalPrice,
-      user: req.user._id,
-    })
-    const newOrder = await order.save()
+    try {
+      const order = new OrderModel({
+        orderStatus,
+        orderProducts,
+        deliveryAddress,
+        amount,
+        user: req.data.user._id,
+      })
+      const newOrder = await order.save()
 
-    res.status(201).json({ msg: 'Order created successfully', order: newOrder })
+      res
+        .status(201)
+        .json({ msg: 'Order created successfully', order: newOrder })
+    } catch (err) {
+      next(new Error('Error in postOrder' + err))
+    }
   }
 }
 
-// GET ORDER DETAIL (BY ORDER ID)
+// UPDATE ORDER
 
-const getOrderDetail = async (req, res) => {
-  const order = await OrderModel.findById(req.params.id)
-  if (order) {
-    res.status(200).json(order)
-  } else {
-    res.status(404).json({ message: 'Order Not Found' })
+const updateOrder = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const verifyOrder = await OrderModel.findOne({ _id: { $eq: id } })
+
+    const updatedOrder = await OrderModel.findByIdAndUpdate(
+      verifyOrder,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    )
+    res.status(200).json(updatedOrder)
+  } catch (err) {
+    next(new Error('Error in updateOrder' + err))
   }
 }
 
 // SET DELIVERY ORDER
 
-const setOrderDelivery = async (req, res) => {
+const setOrderDelivery = async (req, res, next) => {
+  if (!req.params.id) next(new Error('You need to provide an id'))
   const order = await OrderModel.findById(req.params.id)
   if (order) {
-    order.isDelivered = true
+    order.orderStatus = 'Delivered'
     order.deliveredAt = Date.now()
-    await order.save()
-    res.status(200).json({ message: 'Order Delivered' })
+    const delivered = await order.save()
+    res.status(200).json({ message: 'Order Delivered', delivered })
   } else {
-    res.status(404).json({ message: 'Order Not Found' })
+    next(new Error('Order Not Found'))
   }
 }
 
 // DELETE ORDER
 
-const deleteOrder = async (req, res) => {
+const deleteOrder = async (req, res, next) => {
+  if (!req.params.id) next(new Error('You need to provide an id'))
   const order = await OrderModel.findById(req.params.id)
   if (order) {
-    await order.remove()
-    res.status(200).json({ message: 'Order Deleted' })
+    order.isDeleted = true
+    const deletedOrder = await order.save()
+    res.status(200).json({ message: 'Order Deleted', deletedOrder })
   } else {
-    res.status(404).json({ message: 'Order Not Found' })
+    next(new Error('Order Not Found'))
   }
 }
 
 // GET ORDERS BY USER ID
 
-const getUserOrders = async (req, res) => {
-  const userOrder = await OrderModel.find({ user: req.data.user._id })
-  res.status(200).json(userOrder)
+const getUserOrders = async (req, res, next) => {
+  if (!req.params.userId) next(new Error('You need to provide an id'))
+  try {
+    const orders = await OrderModel.find({ user: req.params.userId })
+    res.status(200).json({ msg: 'Succesfull request', orders })
+  } catch (err) {
+    next(new Error('User Order Not Found' + err))
+  }
 }
 
-// PAY ORDER
+// GET INCOMES
 
-const setPaymentOrder = async (req, res) => {
-  const order = await OrderModel.findById(req.params.id)
+const icomeStatsAdmin = async (req, res, next) => {
+  const productId = req.query.pid
+  const date = new Date()
+  const lastMonth = new Date(date.setMonth(date.getMonth() - 1))
+  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1))
 
-  if (order) {
-    order.paidAt = Date.now()
-    order.isPaid = true
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      email_address: req.body.email_address,
-    }
-
-    const paidOrder = await order.save()
-
-    return res.status(200).json(paidOrder)
-  } else {
-    return res.status(404).json({ message: 'Order Not Found' })
+  try {
+    const income = await OrderModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: previousMonth },
+          ...(productId && {
+            products: { $elemMatch: { productId } },
+          }),
+        },
+      },
+      {
+        $project: {
+          month: { $month: '$createdAt' },
+          sales: '$amount',
+        },
+      },
+      {
+        $group: {
+          _id: '$month',
+          total: { $sum: '$sales' },
+        },
+      },
+    ])
+    res.status(200).json({ msg: 'Succesfull request', income })
+  } catch (err) {
+    next(new Error('Error in getIncomes ' + err))
   }
 }
 
@@ -111,8 +139,8 @@ module.exports = {
   getAllOrders,
   postOrder,
   getUserOrders,
-  getOrderDetail,
   setOrderDelivery,
-  setPaymentOrder,
   deleteOrder,
+  icomeStatsAdmin,
+  updateOrder,
 }

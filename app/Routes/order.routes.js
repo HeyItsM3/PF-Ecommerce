@@ -1,22 +1,22 @@
 const { Router } = require('express')
-// const { isAuth, isAdmin } = require('../middleware/authentication')
+const { isAuth, isAdmin } = require('../middleware/authentication')
 const {
   postOrder,
   getAllOrders,
   getUserOrders,
-  getOrderDetail,
   setOrderDelivery,
   deleteOrder,
-  setPaymentOrder,
+  updateOrder,
+  icomeStatsAdmin,
 } = require('../Controllers/order')
 const router = Router()
 
-router.get('/', getAllOrders) // add isAuth and isAdmin
-router.get('/user', getUserOrders) // add isAuth
-router.get('/:id', getOrderDetail) // add isAuth
-router.post('/create', postOrder) // add isAuth
-router.put('/:id/pay', setPaymentOrder) // add isAuth
-router.put('/:id/delivery', setOrderDelivery) // add isAuth
-router.delete('/delete/:id', deleteOrder) // add isAuth
+router.get('/', isAdmin, getAllOrders) // add isAuth and isAdmin
+router.get('/income', isAdmin, icomeStatsAdmin) // add isAuth
+router.put('/update/:id', isAuth, updateOrder) // add isAuth
+router.get('/user/:userId', isAuth, getUserOrders) // add isAuth
+router.post('/create', isAuth, postOrder) // add isAuth
+router.put('/:id/delivery', isAdmin, setOrderDelivery) // add isAuth
+router.delete('/delete/:id', isAuth, deleteOrder) // add isAuth
 
 module.exports = router

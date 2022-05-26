@@ -61,7 +61,7 @@ const loginUser = async (req, res, next) => {
       next(new Error('Invalid email or password'))
     }
   } catch (err) {
-    next(new Error('Error in login user'))
+    next(new Error('Error in login user' + err))
   }
 }
 

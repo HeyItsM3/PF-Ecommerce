@@ -17,10 +17,6 @@ const productSchema = new Schema(
       type: String,
       required: [true, 'name is required'],
     },
-    brand: {
-      type: String,
-      required: [true, 'brand is required'],
-    },
     description: {
       type: String,
       required: [true, 'description is required'],
@@ -29,9 +25,9 @@ const productSchema = new Schema(
       type: Number,
       required: [true, 'price is required'],
     },
-    amount: {
+    amountInStock: {
       type: Number,
-      required: [true, 'amount is required'],
+      required: [true, 'amountInStock is required'],
     },
     condition: {
       type: String,
@@ -42,49 +38,48 @@ const productSchema = new Schema(
       type: String,
       required: [true, 'model is required'],
     },
-    offer: {
-      type: Boolean,
-      default: false,
-    },
-    dimensions: {
+    screenSize: {
       type: mongoose.Types.Decimal128,
+      required: [true, 'screenSize is required'],
     },
-    rating: {
+    internalMemory: {
       type: Number,
-      required: [true, 'rating is required'],
-      default: 0,
+      required: [true, 'internalMemory is required'],
     },
     amountReviews: {
       type: Number,
       required: [true, 'amount is required'],
       default: 0,
     },
-    category: {
-      type: String,
-      enum: [
-        'art',
-        'Bookstore and haberdashery',
-        'cards',
-        'motorcycle and others',
-        'beauty and personal care',
-        'sports and fitness',
-        'home appliances',
-        'home furniture and garden',
-        'fashion',
-        'kids',
-        'other',
-        'technology',
-      ],
-      required: [true, 'category is required'],
-    },
     image: {
       type: [String],
       required: [true, 'image is required'],
     },
-    other: {
-      type: String,
-    },
     reviews: [reviewSchema],
+    brand: {
+      type: String,
+      enum: [
+        'ALCATEL',
+        'APPLE',
+        'ASUS',
+        'HUAWEI',
+        'LG',
+        'MOTOROLA',
+        'NOKIA',
+        'SAMSUNG',
+        'SONY',
+        'XIAOMI',
+      ],
+      required: [true, 'category is required'],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     versionKey: false,
