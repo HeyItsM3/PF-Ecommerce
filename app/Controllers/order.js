@@ -39,6 +39,23 @@ const postOrder = async (req, res, next) => {
   }
 }
 
+// UPDATE ORDER
+
+const updateOrder = async (req, res, next) => {
+  try {
+    const updatedOrder = await OrderModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    )
+    res.status(200).json(updatedOrder)
+  } catch (err) {
+    next(new Error('Error in updateOrder' + err))
+  }
+}
+
 // SET DELIVERY ORDER
 
 const setOrderDelivery = async (req, res, next) => {
@@ -71,6 +88,7 @@ const deleteOrder = async (req, res, next) => {
 // GET ORDERS BY USER ID
 
 const getUserOrders = async (req, res, next) => {
+  if (!req.params.userId) next(new Error('You need to provide an id'))
   try {
     const orders = await OrderModel.find({ user: req.params.userId })
     res.status(200).json({ msg: 'Succesfull request', orders })
@@ -81,7 +99,7 @@ const getUserOrders = async (req, res, next) => {
 
 // GET INCOMES
 
-const getIncomes = async (req, res, next) => {
+const icomeStatsAdmin = async (req, res, next) => {
   const productId = req.query.pid
   const date = new Date()
   const lastMonth = new Date(date.setMonth(date.getMonth() - 1))
@@ -122,5 +140,6 @@ module.exports = {
   getUserOrders,
   setOrderDelivery,
   deleteOrder,
-  getIncomes,
+  icomeStatsAdmin,
+  updateOrder,
 }
