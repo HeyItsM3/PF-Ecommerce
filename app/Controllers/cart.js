@@ -48,8 +48,8 @@ const createCart = async (req, res, next) => {
 
 const updateCart = async (req, res, next) => {
   if (!req.params.id) next(new Error('You need to provide an id'))
-  const verifyCart = await CartModel.findOne({ _id: { $eq: req.params.id } })
-  !verifyCart && next(new Error('This cart does not exist anymore'))
+  // const verifyCart = await CartModel.findOne({ _id: { $eq: req.params.id } })
+  // !verifyCart && next(new Error('This cart does not exist anymore'))
   try {
     const updatedCart = await CartModel.findByIdAndUpdate(
       req.params.id,

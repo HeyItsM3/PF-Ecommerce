@@ -147,7 +147,7 @@ const deleteProduct = async (req, res, next) => {
 }
 // UPDATE
 
-const upDateProduct = async (req, res, next) => {
+const updateProduct = async (req, res, next) => {
   if (!req.params.id) next(new Error('You need to provide an id'))
 
   const { id } = req.params
@@ -176,5 +176,5 @@ module.exports = {
   getProductDetail,
   postProduct,
   deleteProduct,
-  upDateProduct,
+  updateProduct,
 }

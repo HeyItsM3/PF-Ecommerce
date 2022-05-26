@@ -1,6 +1,4 @@
 const OrderModel = require('../Models/order')
-// const UserModel = require('../Models/users')
-// const ProductModel = require('../Models/products')
 
 // GET ORDERS
 
@@ -43,8 +41,11 @@ const postOrder = async (req, res, next) => {
 
 const updateOrder = async (req, res, next) => {
   try {
+    const { id } = req.params
+    const verifyOrder = await OrderModel.findOne({ _id: { $eq: id } })
+
     const updatedOrder = await OrderModel.findByIdAndUpdate(
-      req.params.id,
+      verifyOrder,
       {
         $set: req.body,
       },

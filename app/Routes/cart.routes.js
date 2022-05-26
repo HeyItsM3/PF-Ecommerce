@@ -11,8 +11,8 @@ const router = Router()
 
 router.get('/', isAdmin, getAllCarts)
 router.post('/create', isAuth, createCart)
-router.put('/update/:id', isAuth, updateCart)
 router.delete('/delete/:id', isAuth, deleteCart)
+router.put('/update/:id', isAuth, updateCart)
 router.get('/user/:userId', isAuth, userCart)
 
 module.exports = router

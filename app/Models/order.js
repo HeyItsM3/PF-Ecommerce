@@ -22,8 +22,9 @@ const orderSchema = new Schema(
       required: [true, 'Amount is required'],
     },
     deliveryAddress: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Address',
+      required: [true, 'DeliveryAddress is required'],
     },
     orderStatus: {
       type: String,

@@ -6,7 +6,7 @@ const {
   getAllProducts,
   getProductDetail,
   postProduct,
-  upDateProduct,
+  updateProduct,
   deleteProduct,
 } = require('../Controllers/products')
 const router = Router()
@@ -15,6 +15,6 @@ router.get('/', getAllProducts)
 router.get('/detail/:id', getProductDetail)
 router.post('/post', configMulter, validateCreateProduct, postProduct) // add isSeller
 router.delete('/delete/:id', deleteProduct) // add isSeller
-router.put('/update/:id', upDateProduct) // add isSeller
+router.put('/update/:id', updateProduct) // add isSeller
 
 module.exports = router
