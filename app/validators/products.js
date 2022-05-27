@@ -5,13 +5,12 @@ const validateCreateProduct = [
   check('brand').exists().notEmpty(),
   check('description').exists().notEmpty(),
   check('price').isNumeric().exists().notEmpty(),
-  check('amount').isNumeric().exists().notEmpty(),
+  check('amountInStock').isNumeric().exists().notEmpty(),
   check('condition').isString().exists().notEmpty(),
   check('model').isString().exists().notEmpty(),
-  check('offer').isBoolean().exists().notEmpty(),
-  check('dimensions').exists().notEmpty(),
-  check('category').isString().exists().notEmpty(),
-  check('other').isString().exists().notEmpty(),
+  check('screenSize').exists().notEmpty(),
+  check('internalMemory').exists().notEmpty(),
+  check('categories').exists().notEmpty(),
   (req, res, next) => validateResults(req, res, next),
 ]
 
