@@ -48,7 +48,6 @@ const productSchema = new Schema(
     },
     amountReviews: {
       type: Number,
-      required: [true, 'amount is required'],
       default: 0,
     },
     image: {
@@ -70,6 +69,11 @@ const productSchema = new Schema(
         'SONY',
         'XIAOMI',
       ],
+      required: [true, 'brand is required'],
+    },
+    category: {
+      type: String,
+      enum: ['LIBERADO', 'MOVISTAR', 'PERSONAL', 'CLARO'],
       required: [true, 'category is required'],
     },
     createdAt: {

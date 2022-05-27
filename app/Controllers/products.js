@@ -5,7 +5,7 @@ const _ = require('lodash')
 // GET Products
 const getAllProducts = async (req, res, next) => {
   const {
-    query: { name, filter, order },
+    query: { name, order },
   } = req
   try {
     if (name) {
@@ -20,12 +20,12 @@ const getAllProducts = async (req, res, next) => {
           )
     }
     // filter by brand
-    else if (filter) {
-      const products = await ProductModel.find({
-        brand: req.query.filter,
-      })
-      return res.json(products)
-    }
+    // else if (filter) {
+    //   const products = await ProductModel.find({
+    //     brand: req.query.filter,
+    //   })
+    //   return res.json(products)
+    // }
     // order by price
     else if (order) {
       const products = await ProductModel.find().sort({
@@ -72,12 +72,11 @@ const postProduct = async (req, res, next) => {
       brand,
       description,
       price,
-      amount,
+      amountInStock,
       condition,
       model,
-      offer,
-      dimensions,
-      other,
+      screenSize,
+      internalMemory,
       category,
     },
   } = req
@@ -100,13 +99,12 @@ const postProduct = async (req, res, next) => {
       brand,
       description,
       price,
-      amount,
+      amountInStock,
       category,
       condition,
       model,
-      offer,
-      dimensions,
-      other,
+      screenSize,
+      internalMemory,
       image: urls,
     }
 
