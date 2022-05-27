@@ -2,33 +2,94 @@ const { Schema, model, default: mongoose } = require('mongoose')
 
 const orderSchema = new Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Users',
-    },
+    // user: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: [true, 'A user is required'],
+    //   ref: 'Users',
+    // },
     orderProducts: [
       {
-        productId: {
-          type: String,
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: [true, 'Products are required'],
+          ref: 'Products',
+        },
+        image: {
+          type: [String],
+          required: [true, 'Image is required'],
+        },
+        price: {
+          type: Number,
+          required: [true, 'Cost is required'],
         },
         quantity: {
           type: Number,
-          default: 1,
+          required: [true, 'Quantity is required'],
         },
       },
     ],
-    amount: {
-      type: Number,
-      required: [true, 'Amount is required'],
+    paymentResult: {
+      id: String,
+      status: String,
+      update_time: String,
+      email_address: String,
     },
     deliveryAddress: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Address',
-      required: [true, 'DeliveryAddress is required'],
+      fullName: {
+        type: String,
+        required: [true, 'FullName is required'],
+      },
+      address: {
+        type: String,
+        required: [true, 'Address is required'],
+      },
+      country: {
+        type: String,
+        required: [true, 'Country is required'],
+      },
+      province: {
+        type: String,
+        required: [true, 'Province is required'],
+      },
+      city: {
+        type: String,
+        required: [true, 'City is required'],
+      },
+      street: {
+        type: String,
+        required: [true, 'street is required'],
+      },
+      postalCode: {
+        type: Number,
+        required: [true, 'postalCode is required'],
+      },
+      building: { type: String },
+      floor: { type: String },
+      apartment: { type: String },
     },
-    orderStatus: {
-      type: String,
-      default: 'pending',
+    itemsPrice: {
+      type: Number,
+      required: [true, 'ItemsPrice price is required'],
+    },
+    shippingPrice: {
+      type: Number,
+      required: [true, 'Shipping cost is required'],
+    },
+    totalPrice: {
+      type: Number,
+      required: [true, 'Total cost is required'],
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
+      required: [true, 'Payment is required'],
+    },
+    isDelivered: {
+      type: Boolean,
+      default: false,
+    },
+    paidAt: {
+      type: Date,
     },
     isDeleted: {
       type: Boolean,
