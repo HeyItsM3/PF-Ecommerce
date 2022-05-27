@@ -96,9 +96,35 @@ const updateUserProfile = async (req, res, next) => {
   }
 }
 
+const userStats = async (req, res, next) => {
+  const date = new Date()
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1))
+
+  try {
+    const data = await UserModel.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $project: {
+          month: { $month: '$createdAt' },
+        },
+      },
+      {
+        $group: {
+          _id: '$month',
+          total: { $sum: 1 },
+        },
+      },
+    ])
+    res.status(200).json(data)
+  } catch (err) {
+    next(new Error('Error in userStats' + err))
+  }
+}
+
 module.exports = {
   getAllUsers,
   updateUserByAdmin,
   updateUserProfile,
   getUserById,
+  userStats,
 }

@@ -2,41 +2,82 @@ const { Schema, model, default: mongoose } = require('mongoose')
 
 const orderSchema = new Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: [true, 'A user is required'],
-      ref: 'Users',
-    },
+    // user: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: [true, 'A user is required'],
+    //   ref: 'Users',
+    // },
     orderProducts: [
       {
-        name: { type: String, required: [true, 'Name is required'] },
-        quantity: { type: Number, required: [true, 'Quantity is required'] },
-        image: { type: [String], required: [true, 'Image is required'] },
-        price: { type: Number, required: [true, 'Cost is required'] },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: [true, 'Products are required'],
           ref: 'Products',
         },
+        image: {
+          type: [String],
+          required: [true, 'Image is required'],
+        },
+        price: {
+          type: Number,
+          required: [true, 'Cost is required'],
+        },
+        quantity: {
+          type: Number,
+          required: [true, 'Quantity is required'],
+        },
       },
     ],
-    deliveryAddress: {
-      fullName: { type: String, required: [true, 'FullName is required'] },
-      country: { type: String, required: [true, 'Country is required'] },
-      province: { type: String, required: [true, 'Province is required'] },
-      city: { type: String, required: [true, 'City is required'] },
-      zipcode: { type: String, required: [true, 'Zip Code is required'] },
-      street: { type: String, required: [true, 'Street is required'] },
-    },
-    paymentMethod: {
-      type: String,
-      required: [true, 'Payment method is required'],
-    },
     paymentResult: {
       id: String,
       status: String,
-      email_address: String,
       update_time: String,
+      email_address: String,
+    },
+    deliveryAddress: {
+      fullName: {
+        type: String,
+        required: [true, 'FullName is required'],
+      },
+      address: {
+        type: String,
+        required: [true, 'Address is required'],
+      },
+      country: {
+        type: String,
+        required: [true, 'Country is required'],
+      },
+      province: {
+        type: String,
+        required: [true, 'Province is required'],
+      },
+      city: {
+        type: String,
+        required: [true, 'City is required'],
+      },
+      street: {
+        type: String,
+        required: [true, 'street is required'],
+      },
+      postalCode: {
+        type: Number,
+        required: [true, 'postalCode is required'],
+      },
+      building: { type: String },
+      floor: { type: String },
+      apartment: { type: String },
+    },
+    itemsPrice: {
+      type: Number,
+      required: [true, 'ItemsPrice price is required'],
+    },
+    shippingPrice: {
+      type: Number,
+      required: [true, 'Shipping cost is required'],
+    },
+    totalPrice: {
+      type: Number,
+      required: [true, 'Total cost is required'],
     },
     isPaid: {
       type: Boolean,
@@ -50,20 +91,12 @@ const orderSchema = new Schema(
     paidAt: {
       type: Date,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     deliveredAt: {
       type: Date,
-    },
-    itemsPrice: {
-      type: Number,
-      required: [true, 'Products cost is required'],
-    },
-    shippingPrice: {
-      type: Number,
-      required: [true, 'Shipping cost is required'],
-    },
-    totalPrice: {
-      type: Number,
-      required: [true, 'Total cost is required'],
     },
   },
   {
