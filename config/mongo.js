@@ -4,7 +4,7 @@ const dbConnect = () => {
   mongoose.connect(URI_MONGO, {}, (err, res) => {
     !err
       ? console.log('**** CONNECT ****')
-      : console.log('**** ERROR CONNECT ****')
+      : console.log('**** ERROR CONNECT ****' + err)
   })
 }
 
