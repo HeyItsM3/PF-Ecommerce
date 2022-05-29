@@ -73,7 +73,7 @@ const productSchema = new Schema(
     },
     categories: {
       type: Array,
-      // required: [true, 'categories are required'],
+      required: [true, 'categories are required'],
     },
     createdAt: {
       type: Date,
