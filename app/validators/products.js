@@ -10,7 +10,7 @@ const validateCreateProduct = [
   check('model').isString().exists().notEmpty(),
   check('screenSize').exists().notEmpty(),
   check('internalMemory').exists().notEmpty(),
-  check('categories').exists().notEmpty(),
+  // check('categories').exists().notEmpty(),
   (req, res, next) => validateResults(req, res, next),
 ]
 

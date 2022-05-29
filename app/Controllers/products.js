@@ -1,4 +1,4 @@
-const { streamUpload } = require('../utils/utils')
+// const { streamUpload } = require('../utils/utils')
 const ProductModel = require('../Models/products')
 const _ = require('lodash')
 
@@ -96,18 +96,18 @@ const postProduct = async (req, res, next) => {
   } = req
 
   try {
-    if (!req.files) {
-      return res.status(400).json({ msg: 'You have to upload an image' })
-    }
-    const urls = []
-    const files = req.files
-    for (const file of files) {
-      const { buffer } = file
-      const newPath = await streamUpload(buffer)
-      urls.push(newPath)
-    }
-    
-    const categoriesArr = req.body.map((categories) => categories.categories)
+    // if (!req.files) {
+    //   return res.status(400).json({ msg: 'You have to upload an image' })
+    // }
+    // const urls = []
+    // const files = req.files
+    // for (const file of files) {
+    //   const { buffer } = file
+    //   const newPath = await streamUpload(buffer)
+    //   urls.push(newPath)
+    // }
+
+    // const categoriesArr = req.body.map((categories) => categories.categories)
 
     const newProduct = {
       name,
@@ -115,12 +115,12 @@ const postProduct = async (req, res, next) => {
       description,
       price,
       amountInStock,
-      categories: categoriesArr,
+      // categories: categoriesArr,
       condition,
       model,
       screenSize,
       internalMemory,
-      image: urls,
+      // image: urls,
     }
 
     const product = await ProductModel.create(newProduct)

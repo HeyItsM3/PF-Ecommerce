@@ -1,4 +1,4 @@
-const WishlistModel = require('../Models/wishlist')
+// const WishlistModel = require('../Models/wishlist')
 
 // POST WISHLIST
 
