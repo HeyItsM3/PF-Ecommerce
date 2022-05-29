@@ -106,7 +106,8 @@ const postProduct = async (req, res, next) => {
       const newPath = await streamUpload(buffer)
       urls.push(newPath)
     }
-    // const categoriesArr = req.body.categories.map((categories) => categories)
+    
+    const categoriesArr = req.body.map((categories) => categories.categories)
 
     const newProduct = {
       name,
@@ -114,7 +115,7 @@ const postProduct = async (req, res, next) => {
       description,
       price,
       amountInStock,
-      // categories: categoriesArr,
+      categories: categoriesArr,
       condition,
       model,
       screenSize,
