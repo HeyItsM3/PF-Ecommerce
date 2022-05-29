@@ -7,10 +7,15 @@ const getAllProducts = async (req, res, next) => {
   const {
     query: { name, order },
   } = req
+
+  const qNew = req.query.new
+  const qCategory = req.query.category
+  let products
+
   try {
     if (name) {
       const regex = new RegExp(_.escapeRegExp(name), 'i')
-      const products = await ProductModel.find({ name: { $regex: regex } })
+      products = await ProductModel.find({ name: { $regex: regex } })
       products
         ? res.status(200).json({ message: `Successful request`, products })
         : next(
@@ -19,6 +24,7 @@ const getAllProducts = async (req, res, next) => {
             )
           )
     }
+
     // filter by brand
     // else if (filter) {
     //   const products = await ProductModel.find({
@@ -32,10 +38,19 @@ const getAllProducts = async (req, res, next) => {
         price: req.query.order,
       })
       return res.json(products)
-    } else {
-      const product = await ProductModel.find()
-      return res.status(200).json({ message: 'Successful request', product })
     }
+    if (qNew) {
+      products = await ProductModel.find().sort({ createdAt: -1 }).limit(1)
+    } else if (qCategory) {
+      products = await ProductModel.find({
+        categories: {
+          $in: [qCategory],
+        },
+      })
+    } else {
+      products = await ProductModel.find()
+    }
+    return res.status(200).json({ message: 'Successful request', products })
   } catch (err) {
     next(new Error(`Failed to getAllProducts product controller ` + err))
   }
@@ -69,7 +84,6 @@ const postProduct = async (req, res, next) => {
   const {
     body: {
       name,
-      brand,
       description,
       price,
       amountInStock,
@@ -77,7 +91,7 @@ const postProduct = async (req, res, next) => {
       model,
       screenSize,
       internalMemory,
-      category,
+      brand,
     },
   } = req
 
@@ -85,7 +99,6 @@ const postProduct = async (req, res, next) => {
     if (!req.files) {
       return res.status(400).json({ msg: 'You have to upload an image' })
     }
-
     const urls = []
     const files = req.files
     for (const file of files) {
@@ -93,6 +106,8 @@ const postProduct = async (req, res, next) => {
       const newPath = await streamUpload(buffer)
       urls.push(newPath)
     }
+    
+    const categoriesArr = req.body.map((categories) => categories.categories)
 
     const newProduct = {
       name,
@@ -100,7 +115,7 @@ const postProduct = async (req, res, next) => {
       description,
       price,
       amountInStock,
-      category,
+      categories: categoriesArr,
       condition,
       model,
       screenSize,
@@ -169,10 +184,53 @@ const updateProduct = async (req, res, next) => {
   }
 }
 
+// REVIEW
+
+const postProductReview = async (req, res, next) => {
+  const { rating, comment } = req.body
+
+  const product = await ProductModel.findById(req.params.id)
+
+  try {
+    if (product) {
+      const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.data.user._id.toString()
+      )
+
+      if (alreadyReviewed) {
+        next(new Error('Yo already post a review'))
+      }
+
+      const review = {
+        name: req.data.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.data.user._id,
+      }
+
+      product.reviews.push(review)
+
+      product.numReviews = product.reviews.length
+
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length
+
+      await product.save()
+      res.status(201).json({ msg: 'Review added' })
+    } else {
+      res.status(404).json({ msg: 'Product not found' })
+    }
+  } catch (err) {
+    next(new Error('Filed postProductReview controller' + err))
+  }
+}
+
 module.exports = {
   getAllProducts,
   getProductDetail,
   postProduct,
   deleteProduct,
   updateProduct,
+  postProductReview,
 }

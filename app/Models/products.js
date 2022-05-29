@@ -71,10 +71,9 @@ const productSchema = new Schema(
       ],
       required: [true, 'brand is required'],
     },
-    category: {
-      type: String,
-      enum: ['LIBERADO', 'MOVISTAR', 'PERSONAL', 'CLARO'],
-      required: [true, 'category is required'],
+    categories: {
+      type: Array,
+      required: [true, 'categories are required'],
     },
     createdAt: {
       type: Date,

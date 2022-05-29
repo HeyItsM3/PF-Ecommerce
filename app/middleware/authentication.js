@@ -23,15 +23,15 @@ const isAdmin = (req, res, next) => {
   })
 }
 
-const isSeller = (req, res, next) => {
+const isRegistered = (req, res, next) => {
   isAuth(req, res, () => {
     const { user } = req.data
-    if ((user && user.role === 'seller') || user.isAdmin === true) {
+    if ((user && user.role === 'registered') || user.isAdmin === true) {
       return next()
     } else {
-      res.status(400).json({ msg: 'You must be a seller to do that' })
+      res.status(400).json({ msg: 'You must be Registered to do that' })
     }
   })
 }
 
-module.exports = { isAuth, isAdmin, isSeller }
+module.exports = { isAuth, isAdmin, isRegistered }
