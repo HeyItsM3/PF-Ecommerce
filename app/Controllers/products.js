@@ -96,7 +96,7 @@ const postProduct = async (req, res, next) => {
   } = req
 
   try {
-    if (!req.files) {
+    if (!req.files[0]) {
       return res.status(400).json({ msg: 'You have to upload an image' })
     }
     const urls = []
