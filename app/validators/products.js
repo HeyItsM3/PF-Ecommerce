@@ -11,6 +11,7 @@ const validateCreateProduct = [
   check('screenSize').exists().notEmpty(),
   check('internalMemory').exists().notEmpty(),
   // check('categories').exists().notEmpty(),
+  check('image').exists().notEmpty(),
   (req, res, next) => validateResults(req, res, next),
 ]
 
