@@ -3,9 +3,9 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-const flash = require('express-flash')
-const session = require('express-session')
-const passport = require('passport')
+// const flash = require('express-flash')
+// const session = require('express-session')
+// const passport = require('passport')
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
@@ -27,16 +27,16 @@ require('./config/googleConfig')
 app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ limit: '50bm', extended: true }))
-app.use(
-  session({
-    secret: 'secr3t',
-    resave: false,
-    saveUninitialized: true,
-  })
-)
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(flash())
+// app.use(
+//   session({
+//     secret: 'secr3t',
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// )
+// app.use(passport.initialize())
+// app.use(passport.session())
+// app.use(flash())
 app.use(morgan('dev'))
 app.use(helmet())
 // app.use(
@@ -51,22 +51,22 @@ app.use(
   })
 )
 
-app.get(
-  '/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-  })
-)
+// app.get(
+//   '/auth/google',
+//   passport.authenticate('google', {
+//     scope: ['profile', 'email'],
+//   })
+// )
 
-app.get(
-  '/auth/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/',
-    successRedirect: '/profile',
-    failureFlash: true,
-    successFlash: 'Successfully logged in!',
-  })
-)
+// app.get(
+//   '/auth/google/callback',
+//   passport.authenticate('google', {
+//     failureRedirect: '/',
+//     successRedirect: '/profile',
+//     failureFlash: true,
+//     successFlash: 'Successfully logged in!',
+//   })
+// )
 
 //* ROUTES
 app.use('/api', router)
