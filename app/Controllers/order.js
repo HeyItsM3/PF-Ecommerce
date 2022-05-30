@@ -64,6 +64,7 @@ const setOrderDelivery = async (req, res, next) => {
     order.isDelivered = true
     order.deliveredAt = Date.now()
     await order.save()
+    // mando mail
     res.status(200).json({ message: 'Order Delivered' })
   } else {
     next(new Error('Order Not Found'))
