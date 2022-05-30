@@ -11,7 +11,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const app = express()
 const morgan = require('morgan')
-const mongoSanitize = require('express-mongo-sanitize')
+// const mongoSanitize = require('express-mongo-sanitize')
 const PORT = process.env.PORT || 4000
 const { dbConnect } = require('./config/mongo')
 const router = require('./app/Routes')
@@ -39,11 +39,11 @@ app.use(passport.session())
 app.use(flash())
 app.use(morgan('dev'))
 app.use(helmet())
-app.use(
-  mongoSanitize({
-    allowDots: true,
-  })
-)
+// app.use(
+//   mongoSanitize({
+//     allowDots: true,
+//   })
+// )
 app.use(
   cors({
     origin: '*',
