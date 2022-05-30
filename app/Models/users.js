@@ -35,6 +35,11 @@ const userSchema = new Schema(
       default: false,
       required: true,
     },
+    source: { 
+      type: String,
+      default: "manual", 
+      required: [true, "source not specified"] 
+    },
   },
   {
     versionKey: false,
