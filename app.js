@@ -3,6 +3,9 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
+const flash = require("express-flash");
+const session = require("express-session")
+const passport = require('passport')
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
@@ -16,14 +19,28 @@ const {
   handleError,
 } = require('./app/middleware/Error/Errors')
 const { limiter } = require('./app/utils/utils')
+require("./config/passport");
+require("./config/googleConfig");
 
 //* MIDDLEWARE
 app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+// app.use(express.bodyParser())
+// app.use(session({ secret: 'secret'}))
+app.use(
+  session({
+    secret: "secr3t",
+    resave: false,
+    saveUninitialized: true,
+  })
+); 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 app.use(morgan('dev'))
 app.use(helmet())
-app.use(express.urlencoded({ limit: '50bm', extended: true }))
+// app.use(express.urlencoded({ limit: '50bm', extended: true }))
 app.use(
   cors({
     origin: '*',
@@ -31,10 +48,30 @@ app.use(
   })
 )
 
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/",
+    successRedirect: "/profile",
+    failureFlash: true,
+    successFlash: "Successfully logged in!",
+  })
+);
+
+
 //* ROUTES
 app.use('/api', router)
 app.use(middlewareError)
 app.use(handleError)
+
+
 
 //* CONNECTION
 dbConnect()
