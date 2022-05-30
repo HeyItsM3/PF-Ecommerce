@@ -7,7 +7,7 @@ const {
   userStats,
 } = require('../Controllers/users')
 const { registerUser, loginUser } = require('../Controllers/auth')
-const { isAuth, isAdmin } = require('../middleware/authentication.js')
+const { isAuth, isAdmin } = require('../Middleware/authentication.js')
 const router = Router()
 
 router.get('/', isAdmin, getAllUsers)

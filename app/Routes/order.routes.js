@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { validateOrderProduct } = require('../validators/order')
-// const { isAuth, isAdmin } = require('../middleware/authentication')
+// const { isAuth, isAdmin } = require('../Middleware/authentication')
 const {
   postOrder,
   getAllOrders,
