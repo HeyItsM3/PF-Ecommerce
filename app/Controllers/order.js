@@ -7,7 +7,7 @@ const getAllOrders = async (req, res, next) => {
     const orders = await OrderModel.find().populate('user', 'name')
     res.status(200).json(orders)
   } catch (err) {
-    next(new Error('Filed getAllOrders product controller' + err))
+    next(new Error('Failed getAllOrders product controller' + err))
   }
 }
 

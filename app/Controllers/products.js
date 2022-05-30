@@ -8,8 +8,8 @@ const getAllProducts = async (req, res, next) => {
     query: { name, order },
   } = req
 
-  const qNew = req.query.new
-  const qCategory = req.query.category
+  const queryNew = req.query.new
+  const queryCategory = req.query.category
   let products
 
   try {
@@ -24,14 +24,6 @@ const getAllProducts = async (req, res, next) => {
             )
           )
     }
-
-    // filter by brand
-    // else if (filter) {
-    //   const products = await ProductModel.find({
-    //     brand: req.query.filter,
-    //   })
-    //   return res.json(products)
-    // }
     // order by price
     else if (order) {
       const products = await ProductModel.find().sort({
@@ -39,12 +31,12 @@ const getAllProducts = async (req, res, next) => {
       })
       return res.json(products)
     }
-    if (qNew) {
+    if (queryNew) {
       products = await ProductModel.find().sort({ createdAt: -1 }).limit(1)
-    } else if (qCategory) {
+    } else if (queryCategory) {
       products = await ProductModel.find({
         categories: {
-          $in: [qCategory],
+          $in: [queryCategory],
         },
       })
     } else {
@@ -74,7 +66,7 @@ const getProductDetail = async (req, res, next) => {
           )
         )
   } catch (err) {
-    next(new Error('Filed getProductDetail product controller' + err))
+    next(new Error('Failed getProductDetail product controller' + err))
   }
 }
 
@@ -154,7 +146,7 @@ const deleteProduct = async (req, res, next) => {
       )
     }
   } catch (err) {
-    next(new Error('Filed deleteProduct controller' + err))
+    next(new Error('Failed deleteProduct controller' + err))
   }
 }
 // UPDATE
@@ -170,19 +162,17 @@ const updateProduct = async (req, res, next) => {
       { new: true }
     )
     product
-      ? res
-          .status(200)
-          .json({
-            msg: `The product with id: ${id} was successfully updated`,
-            product,
-          })
+      ? res.status(200).json({
+          msg: `The product with id: ${id} was successfully updated`,
+          product,
+        })
       : next(
           new Error(
             `Unable to update the product please check if the id is correct`
           )
         )
   } catch (err) {
-    next(new Error('Filed upDateProduct controller' + err))
+    next(new Error('Failed upDateProduct controller' + err))
   }
 }
 
@@ -224,7 +214,7 @@ const postProductReview = async (req, res, next) => {
       res.status(404).json({ msg: 'Product not found' })
     }
   } catch (err) {
-    next(new Error('Filed postProductReview controller' + err))
+    next(new Error('Failed postProductReview controller' + err))
   }
 }
 
