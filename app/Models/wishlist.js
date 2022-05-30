@@ -5,9 +5,10 @@ const wishlistModel = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Users',
   },
-  items: [
+  product: [
     {
-      product: { type: Schema.Types.ObjectId, ref: 'Products' },
+      type: Schema.Types.ObjectId,
+      ref: 'Products',
     },
   ],
 })
