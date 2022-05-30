@@ -11,6 +11,6 @@ const router = Router()
 router.post('/add/:productId', isAuth, insertToWishlist)
 router.get('/user/', isAuth, findWishlist)
 router.delete('/delete/:productId', isAuth, deleteFromWishlist)
-router.get('/all', isAuth, isAdmin, getAllWishlist)
+router.get('/all', isAdmin, getAllWishlist)
 
 module.exports = router
