@@ -91,12 +91,13 @@ const postProduct = async (req, res, next) => {
       model,
       screenSize,
       internalMemory,
+      categories,
       brand,
     },
   } = req
 
   try {
-    if (!req.files) {
+    if (!req.files[0]) {
       return res.status(400).json({ msg: 'You have to upload an image' })
     }
     const urls = []
@@ -106,8 +107,6 @@ const postProduct = async (req, res, next) => {
       const newPath = await streamUpload(buffer)
       urls.push(newPath)
     }
-    
-    const categoriesArr = req.body.map((categories) => categories.categories)
 
     const newProduct = {
       name,
@@ -115,7 +114,7 @@ const postProduct = async (req, res, next) => {
       description,
       price,
       amountInStock,
-      categories: categoriesArr,
+      categories,
       condition,
       model,
       screenSize,
@@ -173,7 +172,10 @@ const updateProduct = async (req, res, next) => {
     product
       ? res
           .status(200)
-          .json({ msg: `The product with id: ${id} was successfully updated` })
+          .json({
+            msg: `The product with id: ${id} was successfully updated`,
+            product,
+          })
       : next(
           new Error(
             `Unable to update the product please check if the id is correct`
