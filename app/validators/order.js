@@ -1,5 +1,5 @@
 const { check } = require('express-validator')
-const validateResults = require('../middleware/handleValidator')
+const validateResults = require('../Middleware/handleValidator')
 const validateOrderProduct = [
   check('orderProducts').exists().notEmpty(),
   check('deliveryAddress').exists().notEmpty(),
