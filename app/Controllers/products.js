@@ -172,7 +172,10 @@ const updateProduct = async (req, res, next) => {
     product
       ? res
           .status(200)
-          .json({ msg: `The product with id: ${id} was successfully updated` })
+          .json({
+            msg: `The product with id: ${id} was successfully updated`,
+            product,
+          })
       : next(
           new Error(
             `Unable to update the product please check if the id is correct`
