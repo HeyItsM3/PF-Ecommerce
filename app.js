@@ -18,7 +18,7 @@ const router = require('./app/Routes')
 const {
   middlewareError,
   handleError,
-} = require('./app/middleware/Error/Errors')
+} = require('./app/Middleware/Error/Errors')
 const { limiter } = require('./app/utils/utils')
 require('./config/passport')
 require('./config/googleConfig')

@@ -1,5 +1,5 @@
 const { check } = require('express-validator')
-const validateResults = require('../middleware/handleValidator')
+const validateResults = require('../Middleware/handleValidator')
 const validateUser = [
   check('name').exists().notEmpty().isLength({ min: 5, max: 123 }),
 

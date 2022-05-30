@@ -1,23 +1,32 @@
 // GOOGLE AUTH CONFIGURATION
-const addGoogleUser = (User) => ({ id, email, firstName, lastName, profilePhoto }) => {
+const addGoogleUser =
+  (User) =>
+  ({ id, email, firstName, lastName, profilePhoto }) => {
     const user = new User({
-      id, email, firstName, lastName, profilePhoto, source: "google"
+      id,
+      email,
+      firstName,
+      lastName,
+      profilePhoto,
+      source: 'google',
     })
     return user.save()
   }
-  
-  const getUsers = (User) => () => {
-    return User.find({})
-  }
-  
-  const getUserByEmail = (User) => async ({ email }) => {
+
+const getUsers = (User) => () => {
+  return User.find({})
+}
+
+const getUserByEmail =
+  (User) =>
+  async ({ email }) => {
     return await User.findOne({ email })
   }
-  
-  module.exports = (User) => {
-    return {
-      addGoogleUser: addGoogleUser(User),
-      getUsers: getUsers(User),
-      getUserByEmail: getUserByEmail(User)
-    }
+
+module.exports = (User) => {
+  return {
+    addGoogleUser: addGoogleUser(User),
+    getUsers: getUsers(User),
+    getUserByEmail: getUserByEmail(User),
   }
+}
