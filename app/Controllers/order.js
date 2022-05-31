@@ -1,4 +1,6 @@
 const OrderModel = require('../Models/order')
+const { sendDeliveredEmail } = require('../utils/utils')
+const user = require('../Models/users')
 
 // GET ORDERS
 
@@ -64,7 +66,7 @@ const setOrderDelivery = async (req, res, next) => {
     order.isDelivered = true
     order.deliveredAt = Date.now()
     await order.save()
-    // mando mail
+    sendDeliveredEmail(user.name, user.email);
     res.status(200).json({ message: 'Order Delivered' })
   } else {
     next(new Error('Order Not Found'))
