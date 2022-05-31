@@ -2,11 +2,11 @@ const { Schema, model, default: mongoose } = require('mongoose')
 
 const orderSchema = new Schema(
   {
-    // user: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: [true, 'A user is required'],
-    //   ref: 'Users',
-    // },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, 'A user is required'],
+      ref: 'Users',
+    },
     orderProducts: [
       {
         product: {
@@ -14,8 +14,12 @@ const orderSchema = new Schema(
           required: [true, 'Products are required'],
           ref: 'Products',
         },
+        name: {
+          type: String,
+          required: [true, 'Product name is required'],
+        },
         image: {
-          type: [String],
+          type: Array,
           required: [true, 'Image is required'],
         },
         price: {
@@ -28,12 +32,6 @@ const orderSchema = new Schema(
         },
       },
     ],
-    paymentResult: {
-      id: String,
-      status: String,
-      update_time: String,
-      email_address: String,
-    },
     deliveryAddress: {
       fullName: {
         type: String,

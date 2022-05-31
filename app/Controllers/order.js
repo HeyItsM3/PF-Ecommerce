@@ -9,7 +9,7 @@ const getAllOrders = async (req, res, next) => {
     const orders = await OrderModel.find().populate('user', 'name')
     res.status(200).json(orders)
   } catch (err) {
-    next(new Error('Filed getAllOrders product controller' + err))
+    next(new Error('Failed getAllOrders product controller' + err))
   }
 }
 
@@ -19,11 +19,12 @@ const postOrder = async (req, res, next) => {
   const {
     orderProducts,
     deliveryAddress,
-    paymentMethod,
     itemsPrice,
     shippingPrice,
     totalPrice,
   } = req.body
+  if (!req.body)
+    return res.status(404).json({ msg: 'You need to provide all the data' })
   if (orderProducts && orderProducts.length === 0) {
     return res.status(400).json({ msg: 'You need to add orderProducts' })
   } else {
@@ -31,7 +32,6 @@ const postOrder = async (req, res, next) => {
       const order = new OrderModel({
         orderProducts,
         deliveryAddress,
-        paymentMethod,
         itemsPrice,
         shippingPrice,
         totalPrice,
@@ -47,6 +47,7 @@ const postOrder = async (req, res, next) => {
 }
 
 // GET ORDER DETAIL (BY ORDER ID)
+// TO SEE THE DETAIL IN PANEL OF ALL ORDERS
 
 const getOrderDetail = async (req, res) => {
   const order = await OrderModel.findById(req.params.id)
@@ -90,32 +91,9 @@ const deleteOrder = async (req, res, next) => {
 const getUserOrders = async (req, res, next) => {
   try {
     const userOrder = await OrderModel.find({ user: req.data.user._id })
-    res.status(200).json(userOrder)
+    res.status(200).json({ msg: 'Succesfull request', userOrder })
   } catch (err) {
     next(new Error('User Order Not Found' + err))
-  }
-}
-
-// PAY ORDER
-
-const setPaymentOrder = async (req, res) => {
-  const order = await OrderModel.findById(req.params.id)
-
-  if (order) {
-    order.paidAt = Date.now()
-    order.isPaid = true
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      email_address: req.body.email_address,
-    }
-
-    const paidOrder = await order.save()
-
-    return res.status(200).json(paidOrder)
-  } else {
-    return res.status(404).json({ message: 'Order Not Found' })
   }
 }
 
@@ -125,6 +103,5 @@ module.exports = {
   getUserOrders,
   getOrderDetail,
   setOrderDelivery,
-  setPaymentOrder,
   deleteOrder,
 }
