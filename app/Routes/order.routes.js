@@ -1,6 +1,6 @@
 const { Router } = require('express')
-const { validateOrderProduct } = require('../validators/order')
-// const { isAuth, isAdmin } = require('../Middleware/authentication')
+// const { validateOrderProduct } = require('../validators/order')
+const { isAuth, isAdmin } = require('../middleware/authentication')
 const {
   postOrder,
   getAllOrders,
@@ -8,16 +8,14 @@ const {
   getOrderDetail,
   setOrderDelivery,
   deleteOrder,
-  setPaymentOrder,
 } = require('../Controllers/order')
 const router = Router()
 
-router.get('/', getAllOrders) // add isAuth and isAdmin
-router.get('/user', getUserOrders) // add isAuth
-router.get('/:id', getOrderDetail) // add isAuth
-router.post('/create', validateOrderProduct, postOrder) // add isAuth
-router.put('/:id/pay', setPaymentOrder) // add isAuth
-router.put('/:id/delivery', setOrderDelivery) // add isAuth
-router.delete('/delete/:id', deleteOrder) // add isAuth
+router.get('/', isAuth, isAdmin, getAllOrders) // add isAuth and isAdmin
+router.get('/user', isAuth, getUserOrders) // add isAuth
+router.post('/create', isAuth, postOrder) // add isAuth
+router.get('/:id', isAuth, isAdmin, getOrderDetail) // add isAuth
+router.put('/:id/delivery', isAuth, isAdmin, setOrderDelivery) // add isAuth
+router.delete('/delete/:id', isAuth, deleteOrder) // add isAuth
 
 module.exports = router
