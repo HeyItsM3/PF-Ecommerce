@@ -77,6 +77,8 @@ const transporter = nodemailer.createTransport(
   })
 )
 
+// REGISTER EMAIL
+
 const sendRegisterEmail = (name, email) => {
   transporter.sendMail({
     to: email,
@@ -87,6 +89,21 @@ const sendRegisterEmail = (name, email) => {
     <p>Your registration has been successfully completed</p>`,
   })
 }
+
+// DELIVERED EMAIL
+
+module.exports.sendDeliveredEmail = (name, email) => {
+  console.log("Check");
+  transporter.sendMail({
+    to: email,
+    from: 'ecommerce.grupo07@gmail.com',
+    subject: "Tu compra ha llegado exitosamente!",
+    html: `<h1>Esperamos que la disfrutes!</h1>
+        <h2> ${name}</h2>
+        <p>blabla</p>
+        </div>`,
+  }).catch(err => console.log(err));
+};
 
 // RATE-LIMITING CONFIGURATION
 

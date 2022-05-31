@@ -20,8 +20,8 @@ const {
   handleError,
 } = require('./app/middleware/Error/Errors')
 const { limiter } = require('./app/utils/utils')
-require('./config/passport')
-require('./config/googleConfig')
+require("./config/passport");
+// require("./config/googleConfig");
 
 //* MIDDLEWARE
 app.use(limiter)
@@ -59,12 +59,12 @@ app.get(
 )
 
 app.get(
-  '/auth/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/',
-    successRedirect: '/profile',
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    successRedirect: "/",
     failureFlash: true,
-    successFlash: 'Successfully logged in!',
+    successFlash: "Iniciaste sesión correctamente con tu cuenta de Google",
   })
 )
 
