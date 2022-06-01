@@ -3,9 +3,9 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-const flash = require('express-flash')
-const session = require('express-session')
-const passport = require('passport')
+const jwt = require('jsonwebtoken')
+// const { createToken, sendRegisterEmail } = require('./app/utils/utils')
+const passport = require("passport");
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
@@ -20,23 +20,11 @@ const {
   handleError,
 } = require('./app/middleware/Error/Errors')
 const { limiter } = require('./app/utils/utils')
-require('./config/passport')
-// require("./config/googleConfig");
 
 //* MIDDLEWARE
 app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ limit: '50bm', extended: true }))
-app.use(
-  session({
-    secret: 'secr3t',
-    resave: false,
-    saveUninitialized: true,
-  })
-)
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(flash())
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(
@@ -51,22 +39,57 @@ app.use(
   })
 )
 
+dbConnect()
+require('./config/passport')(app);
+
+// GOOGLE
 app.get(
-  '/auth/google',
+  '/google',
   passport.authenticate('google', {
+    session: false,
     scope: ['profile', 'email'],
-  })
-)
+    accessType: 'offline',
+    approvalPrompt: 'force'
+  }),
+);
 
 app.get(
-  '/auth/google/callback',
+  '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/login',
-    successRedirect: '/',
-    failureFlash: true,
-    successFlash: 'Iniciaste sesión correctamente con tu cuenta de Google',
-  })
-)
+    failureRedirect: "/",
+    successRedirect: "/",
+    session: false
+  }),
+  (req, res) => {
+    const payload = {
+      id: req.user.id
+    };
+
+    console.log(req.user.id)
+
+    jwt.sign(payload, process.env.JWT_SEC_KEY, { expiresIn: '5d' }, (err, token) => {
+      console.log(token)
+      const jwt = token;
+
+
+      const htmlWithEmbeddedJWT = `
+    <html>
+      <script>
+        // Save JWT to localStorage
+        window.localStorage.setItem('authorization', '${jwt}');
+        // Redirect browser to root of application
+        window.location.href = '/';
+      </script>
+    </html>       
+    `;
+    
+    console.log(err)
+
+      res.status(200).json({htmlWithEmbeddedJWT, msg: 'success', token});
+    });
+  
+  }
+);
 
 //* ROUTES
 app.use('/api', router)
@@ -74,7 +97,7 @@ app.use(middlewareError)
 app.use(handleError)
 
 //* CONNECTION
-dbConnect()
+
 app.listen(PORT, () => {
   console.log(`El servidor corre correctamente en el puerto ${PORT}`)
 })

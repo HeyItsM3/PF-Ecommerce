@@ -90,20 +90,35 @@ const sendRegisterEmail = (name, email) => {
   })
 }
 
-// DELIVERED EMAIL
+// PAYMENT EMAIL
 
-module.exports.sendDeliveredEmail = (name, email) => {
+const sendPaymentEmail = (name, email) => {
   console.log("Check");
   transporter.sendMail({
     to: email,
     from: 'ecommerce.grupo07@gmail.com',
-    subject: "Tu compra ha llegado exitosamente!",
+    subject: "Gracias por su compra!",
     html: `<h1>Esperamos que la disfrutes!</h1>
         <h2> ${name}</h2>
         <p>blabla</p>
         </div>`,
   }).catch(err => console.log(err));
 };
+// DELIVERED EMAIL
+
+const sendShippedEmail = (name, email) => {
+  console.log("Check");
+  transporter.sendMail({
+    to: email,
+    from: 'ecommerce.grupo07@gmail.com',
+    subject: "Tu compra ha sido enviada exitosamente!",
+    html: `<h1>Esperamos que la disfrutes!</h1>
+        <h2> ${name}</h2>
+        <p>blabla</p>
+        </div>`,
+  }).catch(err => console.log(err));
+};
+
 
 // RATE-LIMITING CONFIGURATION
 
@@ -117,6 +132,8 @@ const limiter = rateLimit({
 module.exports = {
   limiter,
   sendRegisterEmail,
+  sendPaymentEmail,
+  sendShippedEmail,
   cloudinary,
   streamUpload,
   createToken,
