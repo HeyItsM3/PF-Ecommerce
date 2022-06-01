@@ -12,7 +12,7 @@ const router = Router()
 
 router.get('/', isAdmin, getAllUsers)
 router.get('/:id', isAuth, getUserById)
-router.get('/stats', isAuth, userStats)
+router.get('/stats', isAdmin, userStats)
 router.post('/login', loginUser)
 router.post('/register', registerUser)
 router.put('/profile/', isAuth, updateUserProfile)

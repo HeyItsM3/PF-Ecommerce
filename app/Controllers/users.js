@@ -20,7 +20,7 @@ const getAllUsers = async (req, res, next) => {
 const updateUserByAdmin = async (req, res, next) => {
   const {
     params: { id },
-    body: { name, email, phoneNumber, isDeleted, role, isAdmin },
+    body: { name, email, phoneNumber, isDeleted, isAdmin },
   } = req
   try {
     const user = await UserModel.findById(id)
@@ -28,7 +28,6 @@ const updateUserByAdmin = async (req, res, next) => {
       user.name = name || user.name
       user.email = email || user.email
       user.phoneNumber = phoneNumber || user.phoneNumber
-      user.role = role || user.role
       user.isDeleted = isDeleted
       user.isAdmin = isAdmin
 
@@ -65,7 +64,7 @@ const getUserById = async (req, res, next) => {
 const updateUserProfile = async (req, res, next) => {
   const salt = await genSalt(10)
   const {
-    body: { name, email, phoneNumber, role },
+    body: { name, email, phoneNumber },
   } = req
   const { _id } = req.data.user
   try {
@@ -74,7 +73,6 @@ const updateUserProfile = async (req, res, next) => {
       user.name = name || user.name
       user.email = email || user.email
       user.phoneNumber = phoneNumber || user.phoneNumber
-      user.role = role || user.role
       if (req.body.password) {
         user.password = hashSync(req.body.password, salt)
       }
