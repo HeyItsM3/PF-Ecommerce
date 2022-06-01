@@ -1,6 +1,8 @@
 const KEY = process.env.STRIPE_KEY
 const stripe = require('stripe')(KEY)
 const OrderModel = require('../Models/order')
+// const { sendPaymentEmail } = require('../utils/utils')
+// const user = require('../Models/users')
 
 // PAY ORDER
 
@@ -20,6 +22,7 @@ const paymentStripe = async (req, res, next) => {
           order.paidAt = Date.now()
           order.isPaid = true
           const paidOrder = order.save()
+          // sendPaymentEmail(user.name, user.email);
           res.status(200).json({ Stripe: stripeRes, order: paidOrder })
         } else {
           return res.status(404).json({ message: 'Order Not Found' })
