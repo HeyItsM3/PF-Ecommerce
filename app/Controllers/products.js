@@ -41,6 +41,7 @@ const getAllProducts = async (req, res, next) => {
       })
     } else {
       products = await ProductModel.find()
+      // if(products.isDeleted)
     }
     return res.status(200).json({ message: 'Successful request', products })
   } catch (err) {

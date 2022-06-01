@@ -22,7 +22,7 @@ const registerUser = async (req, res, next) => {
     })
     try {
       const user = await newUser.save()
-      sendRegisterEmail(user.name, user.email)
+      sendRegisterEmail(user.name, user.email);
       res.status(200).json({
         _id: user._id,
         name: user.name,

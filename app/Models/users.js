@@ -7,18 +7,31 @@ const userSchema = new Schema(
       trim: true,
       required: [true, 'name is required'],
     },
+    typeEmail: {
+      type: String,
+      required: true,
+      default: 'email'
+    },
     email: {
       type: String,
-      required: [true, 'email is required'],
-      unique: true,
+      required: () => {
+        return this.typeEmail === 'email';
+      }
+    },
+    googleId: {
+      type: String
     },
     password: {
       type: String,
-      required: [true, 'password is required'],
+      required: () => {
+        return this.typeEmail === 'email';
+      }
     },
     phoneNumber: {
       type: String,
-      required: [true, 'phoneNumber is required'],
+      required: () => {
+        return this.typeEmail === 'email';
+      }
     },
     role: {
       type: String,
@@ -46,7 +59,7 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 )
 
 module.exports = model('Users', userSchema)
