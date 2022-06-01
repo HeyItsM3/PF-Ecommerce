@@ -14,7 +14,7 @@ const router = Router()
 router.get('/', isAuth, isAdmin, getAllOrders) // add isAuth and isAdmin
 router.get('/user', isAuth, getUserOrders) // add isAuth
 router.post('/create', isAuth, postOrder) // add isAuth
-router.get('/:id', isAuth, isAdmin, getOrderDetail) // add isAuth
+router.get('/:id', isAuth, getOrderDetail) // add isAuth
 router.put('/:id/delivery', isAuth, isAdmin, setOrderDelivery) // add isAuth
 router.delete('/delete/:id', isAuth, deleteOrder) // add isAuth
 

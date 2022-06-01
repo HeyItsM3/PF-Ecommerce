@@ -20,11 +20,6 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'phoneNumber is required'],
     },
-    role: {
-      type: String,
-      default: 'visitant',
-      enum: ['visitant', 'registered'],
-    },
     isDeleted: {
       type: Boolean,
       required: false,
