@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const jwt = require('jsonwebtoken')
-const { createToken, sendRegisterEmail } = require('./app/utils/utils')
+// const { createToken, sendRegisterEmail } = require('./app/utils/utils')
 const passport = require("passport");
 const express = require('express')
 const helmet = require('helmet')
