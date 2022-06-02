@@ -101,7 +101,7 @@ const sendPaymentEmail = (name, email) => {
       subject: 'Gracias por su compra!',
       html: `<h1>Esperamos que la disfrutes!</h1>
         <h2> ${name}</h2>
-        <p>blabla</p>
+        <p>Hasta la proxima!</p>
         </div>`,
     })
     .catch((err) => console.log(err))
@@ -118,7 +118,7 @@ const sendShippedEmail = (name, email) => {
       subject: 'Tu compra ha sido enviada exitosamente!',
       html: `<h1>Esperamos que la disfrutes!</h1>
         <h2> ${name}</h2>
-        <p>blabla</p>
+        <p>Hasta la proxima!</p>
         </div>`,
     })
     .catch((err) => console.log(err))
