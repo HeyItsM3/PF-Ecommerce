@@ -46,10 +46,6 @@ const productSchema = new Schema(
       type: Number,
       required: [true, 'internalMemory is required'],
     },
-    amountReviews: {
-      type: Number,
-      default: 0,
-    },
     image: {
       type: [String],
       required: [true, 'image is required'],
