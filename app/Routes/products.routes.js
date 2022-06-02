@@ -17,6 +17,6 @@ router.get('/detail/:id', getProductDetail)
 router.post('/post', isAdmin, configMulter, validateCreateProduct, postProduct)
 router.delete('/delete/:id', isAdmin, deleteProduct)
 router.put('/update/:id', isAdmin, updateProduct)
-router.post('/:id/reviews', isAuth, postProductReview)
+router.post('/reviews/:id/', isAuth, postProductReview)
 
 module.exports = router

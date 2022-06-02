@@ -1,6 +1,5 @@
 const OrderModel = require('../Models/order')
 const { sendShippedEmail } = require('../utils/utils')
-const user = require('../Models/users')
 
 // GET ORDERS
 
@@ -62,12 +61,15 @@ const getOrderDetail = async (req, res) => {
 
 const setOrderDelivery = async (req, res, next) => {
   if (!req.params.id) next(new Error('You need to provide an id'))
-  const order = await OrderModel.findById(req.params.id)
+  const order = await OrderModel.findById(req.params.id).populate({
+    path: 'user',
+    select: 'name email',
+  })
   if (order) {
     order.isDelivered = true
     order.deliveredAt = Date.now()
     await order.save()
-    sendShippedEmail(user.name, user.email);
+    sendShippedEmail(order.user.name, order.user.email)
     res.status(200).json({ message: 'Order Delivered' })
   } else {
     next(new Error('Order Not Found'))

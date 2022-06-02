@@ -11,10 +11,7 @@ const insertToWishlist = async (req, res, next) => {
   if (!id) return res.status(404).json({ msg: 'User not found' })
   try {
     const wishList = await WishlistModel.findOne({ user: id })
-    const data = {
-      product: [...wishList.product, productId],
-      user: id,
-    }
+
     if (wishList?.product.includes(productId)) {
       return res
         .status(400)
@@ -27,6 +24,9 @@ const insertToWishlist = async (req, res, next) => {
       })
       await newWishlist.save()
     } else {
+      const data = {
+        product: [...wishList.product, productId],
+      }
       const result = await WishlistModel.findOneAndUpdate(productId, data, {
         new: true,
       })
@@ -34,7 +34,6 @@ const insertToWishlist = async (req, res, next) => {
     }
     return res.status(200).json({
       msg: 'New product in your wishlist',
-      data,
     })
   } catch (err) {
     next(new Error('insertToWishlist failed ' + err))
