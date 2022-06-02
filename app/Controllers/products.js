@@ -187,6 +187,7 @@ const postProductReview = async (req, res, next) => {
   const { rating, comment } = req.body
 
   const product = await ProductModel.findById(req.params.id)
+  if (!product) return res.status(400).json('Product not found with that id')
 
   try {
     if (product) {
