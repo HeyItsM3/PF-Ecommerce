@@ -191,11 +191,11 @@ const postProductReview = async (req, res, next) => {
   try {
     if (product) {
       const alreadyReviewed = product.reviews.find(
-        (r) => r.user.toString() === req.data.user._id.toString()
+        (r) => r.name === req.data.user.name
       )
 
       if (alreadyReviewed) {
-        next(new Error('Yo already post a review'))
+        return res.status(400).json('Yo already post a review')
       }
 
       const review = {
