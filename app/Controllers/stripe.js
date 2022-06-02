@@ -21,7 +21,6 @@ const paymentStripe = async (req, res, next) => {
         next(new Error('Error in paymentStripe' + stripeErr))
       } else {
         if (order) {
-          console.log(order)
           order.paidAt = Date.now()
           order.isPaid = true
           const paidOrder = order.save()
