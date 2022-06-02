@@ -10,7 +10,7 @@ const { registerUser, loginUser } = require('../Controllers/auth')
 const { isAuth, isAdmin } = require('../middleware/authentication.js')
 const router = Router()
 
-router.get('/', isAdmin, getAllUsers)
+router.get('/', getAllUsers)
 router.get('/:id', isAuth, getUserById)
 router.get('/stats', isAdmin, userStats)
 router.post('/login', loginUser)

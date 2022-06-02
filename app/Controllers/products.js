@@ -15,7 +15,7 @@ const getAllProducts = async (req, res, next) => {
   try {
     if (name) {
       const regex = new RegExp(_.escapeRegExp(name), 'i')
-      products = await ProductModel.find({ name: { $regex: regex } })
+      products = await ProductModel.find({ name: { $regex: regex } , isDeleted: false})
       products
         ? res.status(200).json({ message: `Successful request`, products })
         : next(
