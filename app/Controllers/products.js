@@ -189,7 +189,7 @@ const postProductReview = async (req, res, next) => {
   const id = req.params.id
 
   const product = await ProductModel.findById(id)
-  if (!product) return res.status(400).json('Product not found with that id')
+  if (!product) return res.status(400).json('Product not found with that id ')
 
   try {
     if (product) {
