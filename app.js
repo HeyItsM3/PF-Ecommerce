@@ -4,15 +4,15 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const jwt = require('jsonwebtoken')
-// const { createToken, sendRegisterEmail } = require('./app/utils/utils')
-const passport = require("passport");
+// const { sendRegisterEmail } = require('./app/utils/utils')
+const passport = require('passport')
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
 const app = express()
 const morgan = require('morgan')
 const mongoSanitize = require('express-mongo-sanitize')
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 3001
 const { dbConnect } = require('./config/mongo')
 const router = require('./app/Routes')
 const {
@@ -40,7 +40,7 @@ app.use(
 )
 
 dbConnect()
-require('./config/passport')(app);
+require('./config/passport')(app)
 
 // GOOGLE
 app.get(
@@ -49,48 +49,53 @@ app.get(
     session: false,
     scope: ['profile', 'email'],
     accessType: 'offline',
-    approvalPrompt: 'force'
-  }),
-);
+    approvalPrompt: 'force',
+  })
+)
 
 app.get(
   '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: "/",
-    successRedirect: "/",
-    session: false
+    failureRedirect: '/',
+    successRedirect: '/',
+    session: false,
   }),
   (req, res) => {
     const payload = {
-      id: req.user.id
-    };
+      id: req.user.id,
+    }
 
     console.log(req.user.id)
 
-    jwt.sign(payload, process.env.JWT_SEC_KEY, { expiresIn: '5d' }, (err, token) => {
-      console.log(token)
-      const jwt = token;
+    jwt.sign(
+      payload,
+      process.env.JWT_SEC_KEY,
+      { expiresIn: '5d' },
+      (err, token) => {
+        if (err) {
+          console.log('error', err)
+        }
+        console.log(token)
+        const jwt = token
 
+        const htmlWithEmbeddedJWT = `
+        <html>
+          <script>
+            // Save JWT to localStorage
+            window.localStorage.setItem('authorization', '${jwt}');
+            // Redirect browser to root of application
+            window.open('http://localhost:3000/', '_self')
+          </script>
+        </html>
+        `
 
-      const htmlWithEmbeddedJWT = `
-    <html>
-      <script>
-        // Save JWT to localStorage
-        window.localStorage.setItem('authorization', '${jwt}');
-        // Redirect browser to root of application
-        window.location.href = '/';
-      </script>
-    </html>       
-    `;
-    
-    console.log(err)
-
-      res.status(200).json({htmlWithEmbeddedJWT, msg: 'success', token});
-    });
-  
+        res.send(htmlWithEmbeddedJWT)
+      }
+    )
   }
-);
+)
 
+// window.location.href = '/';
 //* ROUTES
 app.use('/api', router)
 app.use(middlewareError)

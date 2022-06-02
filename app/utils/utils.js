@@ -355,33 +355,36 @@ const sendRegisterEmail = (name, email) => {
 // PAYMENT EMAIL
 
 const sendPaymentEmail = (name, email) => {
-  console.log("Check");
-  transporter.sendMail({
-    to: email,
-    from: 'ecommerce.grupo07@gmail.com',
-    subject: "Gracias por su compra!",
-    html: `<h1>Felicitaciones!</h1>
-        <h2>Hola ${name}!</h2>
-        <p>Gracias por comprar en StoreCel, cuando el producto sea despachado te estaremos avisando por este medio.</p>
+  console.log('sendPaymentEmail success')
+  transporter
+    .sendMail({
+      to: email,
+      from: 'ecommerce.grupo07@gmail.com',
+      subject: 'Gracias por su compra!',
+      html: `<h1>Esperamos que la disfrutes!</h1>
+        <h2> ${name}</h2>
+        <p>Hasta la proxima!</p>
         </div>`,
-  }).catch(err => console.log(err));
-};
+    })
+    .catch((err) => console.log(err))
+}
 
 // SHIPPED EMAIL
 
 const sendShippedEmail = (name, email) => {
-  console.log("Check");
-  transporter.sendMail({
-    to: email,
-    from: 'ecommerce.grupo07@gmail.com',
-    subject: "Tu compra ha sido enviada exitosamente!",
-    html: `<h1>Hola ${name}</h1>
-        <h2>Tu compra ha sido despachada!</h2>
-        <p>En los próximos días estará llegando a tu domicilio, esperamos que la disfrutes.</p>
+  console.log('sendShippedEmail success')
+  transporter
+    .sendMail({
+      to: email,
+      from: 'ecommerce.grupo07@gmail.com',
+      subject: 'Tu compra ha sido enviada exitosamente!',
+      html: `<h1>Esperamos que la disfrutes!</h1>
+        <h2> ${name}</h2>
+        <p>Hasta la proxima!</p>
         </div>`,
-  }).catch(err => console.log(err));
-};
-
+    })
+    .catch((err) => console.log(err))
+}
 
 // RATE-LIMITING CONFIGURATION
 

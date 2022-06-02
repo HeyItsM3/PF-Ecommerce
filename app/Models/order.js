@@ -96,12 +96,13 @@ const orderSchema = new Schema(
     deliveredAt: {
       type: Date,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     versionKey: false,
-  },
-  {
-    timestamps: true,
   }
 )
 

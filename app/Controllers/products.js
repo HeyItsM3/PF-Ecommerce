@@ -15,7 +15,10 @@ const getAllProducts = async (req, res, next) => {
   try {
     if (name) {
       const regex = new RegExp(_.escapeRegExp(name), 'i')
-      products = await ProductModel.find({ name: { $regex: regex } , isDeleted: false})
+      products = await ProductModel.find({
+        name: { $regex: regex },
+        isDeleted: false,
+      })
       products
         ? res.status(200).json({ message: `Successful request`, products })
         : next(
@@ -32,7 +35,9 @@ const getAllProducts = async (req, res, next) => {
       return res.json(products)
     }
     if (queryNew) {
-      products = await ProductModel.find().sort({ createdAt: -1 }).limit(1)
+      products = await ProductModel.find({ isDeleted: false })
+        .sort({ createdAt: -1 })
+        .limit(1)
     } else if (queryCategory) {
       products = await ProductModel.find({
         categories: {
@@ -40,8 +45,7 @@ const getAllProducts = async (req, res, next) => {
         },
       })
     } else {
-      products = await ProductModel.find()
-      // if(products.isDeleted)
+      products = await ProductModel.find({ isDeleted: false })
     }
     return res.status(200).json({ message: 'Successful request', products })
   } catch (err) {
@@ -182,16 +186,19 @@ const updateProduct = async (req, res, next) => {
 const postProductReview = async (req, res, next) => {
   const { rating, comment } = req.body
 
-  const product = await ProductModel.findById(req.params.id)
+  const id = req.params.id
+
+  const product = await ProductModel.findById(id)
+  if (!product) return res.status(400).json('Product not found with that id ')
 
   try {
     if (product) {
       const alreadyReviewed = product.reviews.find(
-        (r) => r.user.toString() === req.data.user._id.toString()
+        (r) => r.name === req.data.user.name
       )
 
       if (alreadyReviewed) {
-        next(new Error('Yo already post a review'))
+        return res.status(400).json('Yo already post a review')
       }
 
       const review = {
