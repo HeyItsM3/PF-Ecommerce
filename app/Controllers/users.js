@@ -6,7 +6,7 @@ const { createToken } = require('../utils/utils')
 
 const getAllUsers = async (req, res, next) => {
   try {
-    const user = await UserModel.find()
+    const user = await UserModel.find({isDeleted: false})
     user
       ? res.status(200).json({ message: 'Request exitosa', user })
       : next(new Error('Error Apparently there are no users '))

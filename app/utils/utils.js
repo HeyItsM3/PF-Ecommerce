@@ -83,7 +83,7 @@ const sendRegisterEmail = (name, email) => {
   transporter.sendMail({
     to: email,
     from: 'ecommerce.grupo07@gmail.com',
-    subject: 'Registration completed successfully!',
+    subject: 'Bienvenido a StoreCel! ',
     html: `<h1>Email Confirmation</h1>
     <h2>Hello ${name}</h2>
     <p>Your registration has been successfully completed</p>`,
@@ -104,7 +104,8 @@ const sendPaymentEmail = (name, email) => {
         </div>`,
   }).catch(err => console.log(err));
 };
-// DELIVERED EMAIL
+
+// SHIPPED EMAIL
 
 const sendShippedEmail = (name, email) => {
   console.log("Check");
