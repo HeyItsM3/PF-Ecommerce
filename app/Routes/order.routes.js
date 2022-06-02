@@ -15,7 +15,7 @@ router.get('/', isAuth, isAdmin, getAllOrders) // add isAuth and isAdmin
 router.get('/user', isAuth, getUserOrders) // add isAuth
 router.post('/create', isAuth, postOrder) // add isAuth
 router.get('/:id', isAuth, getOrderDetail) // add isAuth
-router.put('/send/:id', isAdmin, setOrderDelivery) // add isAuth
+router.put('/send/:id', setOrderDelivery) // add isAuth
 router.delete('/delete/:id', isAuth, deleteOrder) // add isAuth
 
 module.exports = router
