@@ -1,4 +1,3 @@
-// Node_Env almacena el entorno actual del proyecto // por defecto es undefined
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
