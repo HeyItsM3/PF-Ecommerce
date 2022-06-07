@@ -27,6 +27,7 @@ passport.use(
 
 module.exports = async (app) => {
   app.use(passport.initialize())
+  app.use(passport.session())
   await googleAuth()
 }
 
@@ -73,3 +74,11 @@ const googleAuth = async () => {
     console.log('Missing google keys')
   }
 }
+
+passport.serializeUser(function (user, done) {
+  done(null, user)
+})
+
+passport.deserializeUser(function (user, done) {
+  done(null, user)
+})

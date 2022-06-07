@@ -1,5 +1,4 @@
 const { Router } = require('express')
-// const { validateOrderProduct } = require('../validators/order')
 const { isAuth, isAdmin } = require('../middleware/authentication')
 const {
   postOrder,
@@ -11,11 +10,11 @@ const {
 } = require('../Controllers/order')
 const router = Router()
 
-router.get('/', isAuth, isAdmin, getAllOrders) // add isAuth and isAdmin
-router.get('/user', isAuth, getUserOrders) // add isAuth
-router.post('/create', isAuth, postOrder) // add isAuth
-router.get('/:id', isAuth, getOrderDetail) // add isAuth
-router.put('/send/:id', setOrderDelivery) // add isAuth
-router.delete('/delete/:id', isAuth, deleteOrder) // add isAuth
+router.get('/', isAuth, isAdmin, getAllOrders)
+router.get('/user', isAuth, getUserOrders)
+router.post('/create', isAuth, postOrder)
+router.get('/:id', isAuth, getOrderDetail)
+router.put('/send/:id', setOrderDelivery)
+router.delete('/delete/:id', isAuth, deleteOrder)
 
 module.exports = router

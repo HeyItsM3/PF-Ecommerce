@@ -51,6 +51,4 @@ const paymentStripe = async (req, res, next) => {
   )
 }
 
-// module.exports = paymentStripe
-
 module.exports = paymentStripe

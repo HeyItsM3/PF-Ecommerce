@@ -9,6 +9,7 @@ const passport = require('passport')
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
+const session = require('express-session')
 const app = express()
 const morgan = require('morgan')
 const mongoSanitize = require('express-mongo-sanitize')
@@ -40,6 +41,7 @@ app.use(
 )
 
 dbConnect()
+app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }))
 require('./config/passport')(app)
 
 // GOOGLE
@@ -75,7 +77,7 @@ app.get(
         if (err) {
           console.log('error', err)
         }
-        console.log(token)
+        console.log('HOLAAA' + token)
         const jwt = token
 
         const htmlWithEmbeddedJWT = `
@@ -95,7 +97,6 @@ app.get(
   }
 )
 
-// window.location.href = '/';
 //* ROUTES
 app.use('/api', router)
 app.use(middlewareError)

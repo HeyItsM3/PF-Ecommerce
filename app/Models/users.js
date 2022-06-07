@@ -10,28 +10,28 @@ const userSchema = new Schema(
     typeEmail: {
       type: String,
       required: true,
-      default: 'email'
+      default: 'email',
     },
     email: {
       type: String,
       required: () => {
-        return this.typeEmail === 'email';
-      }
+        return this.typeEmail === 'email'
+      },
     },
     googleId: {
-      type: String
+      type: String,
     },
     password: {
       type: String,
       required: () => {
-        return this.typeEmail === 'email';
-      }
+        return this.typeEmail === 'email'
+      },
     },
     phoneNumber: {
       type: String,
       required: () => {
-        return this.typeEmail === 'email';
-      }
+        return this.typeEmail === 'email'
+      },
     },
     isDeleted: {
       type: Boolean,
@@ -43,18 +43,13 @@ const userSchema = new Schema(
       default: false,
       required: true,
     },
-    source: {
-      type: String,
-      default: 'manual',
-      required: [true, 'source not specified'],
-    },
   },
   {
     versionKey: false,
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 module.exports = model('Users', userSchema)

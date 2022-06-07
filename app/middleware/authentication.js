@@ -7,7 +7,7 @@ const isAuth = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SEC_KEY, (err, user) => {
     if (err) return res.status(400).json({ msg: 'Invalid token' })
-    req.data = user // New request width user information
+    req.data = user
     next()
   })
 }

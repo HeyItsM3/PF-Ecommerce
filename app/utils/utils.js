@@ -24,13 +24,11 @@ const streamUpload = (req) => {
         reject(error)
       }
     })
-    // const data = req.files.map((x) => x.buffer)
     streamifier.createReadStream(req).pipe(stream)
   })
 }
 
 // JWT CONFIGURATION
-//  id: user._id => Mongo guarda en _doc nuestros documentos
 
 const createToken = (user) =>
   jwt.sign(

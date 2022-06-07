@@ -6,12 +6,11 @@ const { createToken, sendRegisterEmail } = require('../utils/utils')
 
 const registerUser = async (req, res, next) => {
   const { name, password, email, phoneNumber, role } = req.body
-  // Verify if the email already exists
+
   const verifyUser = await UserModel.findOne({ email: { $eq: email } })
   verifyUser && next(new Error('The email already exists.'))
-  const salt = await genSalt(10) // salts for password
+  const salt = await genSalt(10)
 
-  // Check all the fields before create
   if (name && email && password) {
     const newUser = new UserModel({
       name,
@@ -22,7 +21,7 @@ const registerUser = async (req, res, next) => {
     })
     try {
       const user = await newUser.save()
-      sendRegisterEmail(user.name, user.email);
+      sendRegisterEmail(user.name, user.email)
       res.status(200).json({
         _id: user._id,
         name: user.name,
@@ -44,11 +43,9 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   const { email, password } = req.body
   try {
-    // Find user email
     const user = await UserModel.findOne({
       email: { $eq: email },
     })
-    // Check if the password is right
     if (user && (await compare(password, user.password))) {
       const { password, ...rest } = user._doc
       const token = createToken(user)
