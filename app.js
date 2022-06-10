@@ -46,8 +46,6 @@ require('./config/passport')(app)
 
 // GOOGLE
 
-const CLIENT_URL = 'http://localhost:3000/'
-
 router.get('/login/success', (req, res) => {
   if (req.user) {
     res.status(200).json({
@@ -96,7 +94,7 @@ app.get(
           console.log('error', err)
         }
         res.cookie('token', token)
-        res.redirect(307, CLIENT_URL)
+        res.redirect(307, process.env.CLIENT_URL)
       }
     )
   }
