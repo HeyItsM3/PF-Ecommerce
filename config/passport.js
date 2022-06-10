@@ -35,9 +35,9 @@ const googleAuth = async () => {
     passport.use(
       new GoogleStrategy(
         {
-          callbackURL: process.env.CALLBACK_URL,
           clientID: process.env.CLIENT_ID,
           clientSecret: process.env.CLIENT_SECRET,
+          callbackURL: process.env.CALLBACK_URL,
         },
         (accessToken, refreshToken, profile, done) => {
           User.findOne({ email: profile.emails[0].value })

@@ -93,8 +93,8 @@ app.get(
         if (err) {
           console.log('error', err)
         }
-        res.cookie('token', token)
-        res.redirect(307, process.env.CLIENT_URL)
+        res.cookie('token', token, { secure: true })
+        res.redirect(307, 'https://front-sigma-three.vercel.app/')
       }
     )
   }
