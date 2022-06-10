@@ -25,7 +25,6 @@ app.use(express.urlencoded({ limit: '50bm', extended: true }))
 app.use(morgan('dev'))
 app.use(
   helmet({
-    contentSecurityPolicy: false,
     frameguard: true,
   })
 )
