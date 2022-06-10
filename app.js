@@ -95,7 +95,7 @@ app.get(
         res.cookie('token', token, {
           secure: true,
         })
-        res.redirect(307, `${process.env.CLIENT_URL}`)
+        res.redirect(307, process.env.CLIENT_URL)
       }
     )
   }
