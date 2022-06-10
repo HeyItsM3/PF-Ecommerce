@@ -27,7 +27,6 @@ passport.use(
 
 module.exports = async (app) => {
   app.use(passport.initialize())
-  app.use(passport.session())
   await googleAuth()
 }
 
@@ -46,8 +45,6 @@ const googleAuth = async () => {
               if (user) {
                 return done(null, user)
               }
-
-              // const name = profile.displayName.split(' ');
 
               const newUser = new User({
                 typeEmail: 'google',

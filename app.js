@@ -1,9 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-
 const jwt = require('jsonwebtoken')
-// const { sendRegisterEmail } = require('./app/utils/utils')
 const passport = require('passport')
 const express = require('express')
 const helmet = require('helmet')
@@ -25,7 +23,12 @@ app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ limit: '50bm', extended: true }))
 app.use(morgan('dev'))
-app.use(helmet())
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    frameguard: true,
+  })
+)
 app.use(
   mongoSanitize({
     allowDots: true,
@@ -42,6 +45,27 @@ dbConnect()
 require('./config/passport')(app)
 
 // GOOGLE
+
+const CLIENT_URL = 'http://localhost:3000/'
+
+router.get('/login/success', (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: 'successfull',
+      user: req.user,
+      //   cookies: req.cookies
+    })
+  }
+})
+
+router.get('/login/failed', (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: 'failure',
+  })
+})
+
 app.get(
   '/google',
   passport.authenticate('google', {
@@ -55,16 +79,13 @@ app.get(
 app.get(
   '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/',
-    successRedirect: '/',
+    failureRedirect: '/login/failed',
     session: false,
   }),
   (req, res) => {
     const payload = {
       id: req.user.id,
     }
-
-    console.log(req.user.id)
 
     jwt.sign(
       payload,
@@ -74,20 +95,8 @@ app.get(
         if (err) {
           console.log('error', err)
         }
-        console.log('HOLAAA' + token)
-        const jwt = token
-
-        const htmlWithEmbeddedJWT = `
-        <html>
-          <script>
-            // Save JWT to localStorage
-            window.localStorage.setItem('authorization', '${jwt}');
-            // Redirect browser to root of application
-            window.open('http://localhost:3000/', '_self')
-          </script>
-        </html>
-        `
-        res.send(htmlWithEmbeddedJWT)
+        res.cookie('token', token)
+        res.redirect(307, CLIENT_URL)
       }
     )
   }
