@@ -5,6 +5,3 @@ This project is a S.P.A (Single Page Application). It is part of the group proje
 
 ## Stack of Technologies
 NodeJS, Express, MongoDB, Mongoose, Cloudinary, Stripe, NodeMailer, SendGrid.
-
-[Deploy](https://front-heyitsm3.vercel.app/)
-<br/>
