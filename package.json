@@ -30,7 +30,7 @@
     "express-validator": "^6.14.0",
     "helmet": "^5.0.2",
     "joi": "^17.6.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "mongoose": "^6.3.2",
     "mongoose-findorcreate": "^3.0.0",
